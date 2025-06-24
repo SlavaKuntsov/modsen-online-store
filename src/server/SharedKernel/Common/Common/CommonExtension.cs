@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Common.Common;
 
@@ -14,7 +13,6 @@ public static class CommonExtension
 		services.AddControllers();
 
 		services.AddEndpointsApiExplorer();
-		
 
 		return services;
 	}
