@@ -5,7 +5,8 @@ namespace OnlineStore.Application.Abstractions.Data;
 
 public interface IApplicationDbContext
 {
-	// DbSet<User> Users { get; set; }
+	DbSet<User> Users { get; set; }
+	DbSet<RefreshToken> RefreshTokens { get; set; }
 	
 	Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
