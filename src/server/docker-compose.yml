@@ -1,0 +1,44 @@
+services:
+  
+  server:
+    container_name: user-service
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: OnlineStore.API/Dockerfile
+    ports:
+      - "7101:7001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - CONNECTION_STRING=Host=postgres;Port=5432;Database=online_store;Username=postgres;Password=1;Timezone=Europe/Minsk;
+      - REDIS_CONFIGURATION=redis:6379
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    container_name: postgres
+    image: postgres:alpine
+    mem_limit: 512m
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1
+      POSTGRES_DB: online_store
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      
+  redis:
+    container_name: redis
+    image: redis:alpine
+    mem_limit: 256m
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_PASSWORD: 1
+        
+volumes:
+  postgres-data:
