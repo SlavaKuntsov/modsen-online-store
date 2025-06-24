@@ -1,4 +1,4 @@
-﻿using OnlineStore.Domain.Enums;
+﻿using Domain.Enums;
 
 namespace OnlineStore.Domain.Entities;
 
