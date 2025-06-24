@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: OnlineStore.API/Dockerfile
     ports:
-      - "7101:7001"
+      - "7000:7000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - CONNECTION_STRING=Host=postgres;Port=5432;Database=online_store;Username=postgres;Password=1;Timezone=Europe/Minsk;
