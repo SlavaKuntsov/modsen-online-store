@@ -21,4 +21,8 @@
       <ProjectReference Include="..\SharedKernel\Databases\Databases.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Helpers\" />
+    </ItemGroup>
+
 </Project>

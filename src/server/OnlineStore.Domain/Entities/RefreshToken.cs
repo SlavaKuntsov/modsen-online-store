@@ -11,6 +11,8 @@ public class RefreshToken
 
 	public virtual User User { get; set; } = null!;
 
+	public RefreshToken() { }
+
 	public RefreshToken(
 		Guid userId,
 		string token,

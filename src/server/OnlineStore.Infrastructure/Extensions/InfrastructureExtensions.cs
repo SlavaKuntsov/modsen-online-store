@@ -1,4 +1,4 @@
-﻿using Database;
+﻿using Databases;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OnlineStore.Application.Abstractions.Data;
 using OnlineStore.Infrastructure.DataAccess;
+using OnlineStore.Infrastructure.Helpers.Auth;
+using Utilities.Auth;
+using Utilities.Service;
 
 namespace OnlineStore.Infrastructure.Extensions;
 
@@ -16,6 +19,10 @@ public static class InfrastructureExtensions
 		IConfiguration configuration)
 	{
 		services.AddPostgres<IApplicationDbContext, ApplicationDbContext>(configuration);
+
+		services.AddScoped<ICookieService, CookieService>();
+		services.AddScoped<IPasswordHash, PasswordHash>();
+		services.AddScoped<IJwt, Jwt>();
 
 		return services;
 	}

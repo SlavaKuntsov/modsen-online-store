@@ -15,6 +15,8 @@ public class User
 
 	public virtual RefreshToken RefreshToken { get; set; } = null!;
 
+	public User() { }
+	
 	public User(
 		string email,
 		string passwordHash,
