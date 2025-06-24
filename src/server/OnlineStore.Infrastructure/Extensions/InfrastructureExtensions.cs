@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Database;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using OnlineStore.Application.Abstractions.Data;
 using OnlineStore.Infrastructure.DataAccess;
 
 namespace OnlineStore.Infrastructure.Extensions;
@@ -13,19 +15,11 @@ public static class InfrastructureExtensions
 		this IServiceCollection services,
 		IConfiguration configuration)
 	{
-		var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING") 
-								?? configuration.GetConnectionString(nameof(ApplicationDbContext));
+		services.AddPostgres<IApplicationDbContext, ApplicationDbContext>(configuration);
 
-		services.AddDbContextPool<ApplicationDbContext>(
-			options =>
-			{
-				options.UseNpgsql(connectionString);
-			},
-			128);
-		
 		return services;
 	}
-	
+
 	public static IApplicationBuilder ApplyMigrations(this IApplicationBuilder app)
 	{
 		using var scope = app.ApplicationServices.CreateScope();
@@ -41,6 +35,7 @@ public static class InfrastructureExtensions
 		catch (Exception ex)
 		{
 			logger.LogError(ex, "An error occurred while applying database migrations");
+
 			throw;
 		}
 

@@ -16,7 +16,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\OnlineStore.Application\OnlineStore.Application.csproj" />
       <ProjectReference Include="..\OnlineStore.Domain\OnlineStore.Domain.csproj" />
+      <ProjectReference Include="..\SharedKernel\Databases\Databases.csproj" />
     </ItemGroup>
 
 </Project>
