@@ -1,13 +1,13 @@
 ﻿using System.Text;
 using Domain.Enums;
-using Extensions.Enums;
+using Common.Enums;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Extensions.Authorization;
+namespace Common.Authorization;
 
 public static class AuthorizationExtension
 {

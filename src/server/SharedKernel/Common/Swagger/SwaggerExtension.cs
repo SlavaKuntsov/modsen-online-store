@@ -2,7 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Extensions.Swagger;
+namespace Common.Swagger;
 
 public static class SwaggerExtension
 {

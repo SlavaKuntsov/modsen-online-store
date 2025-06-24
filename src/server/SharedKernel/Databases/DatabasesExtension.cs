@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Database;
+namespace Databases;
 
 public static class DatabasesExtension
 {
@@ -19,6 +19,7 @@ public static class DatabasesExtension
 			options =>
 			{
 				options.UseNpgsql(connectionString);
+				options.UseSnakeCaseNamingConvention();
 			},
 			128);
 
@@ -40,6 +41,7 @@ public static class DatabasesExtension
 			options =>
 			{
 				options.UseNpgsql(connectionString);
+				options.UseSnakeCaseNamingConvention();
 			},
 			128);
 

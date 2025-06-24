@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Extensions.Common;
+namespace Common.Common;
 
 public static class CommonExtension
 {
@@ -14,6 +14,7 @@ public static class CommonExtension
 		services.AddControllers();
 
 		services.AddEndpointsApiExplorer();
+		
 
 		return services;
 	}
