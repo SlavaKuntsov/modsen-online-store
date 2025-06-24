@@ -12,7 +12,7 @@ using OnlineStore.Infrastructure.DataAccess;
 namespace OnlineStore.Infrastructure.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250624232151_Initial")]
+    [Migration("20250624233956_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -116,13 +116,13 @@ namespace OnlineStore.Infrastructure.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9f8a3acd-31a3-46c6-9906-901f26c5d592"),
-                            CreatedAt = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Id = new Guid("37fa2711-9d7f-47da-8741-810feaae586d"),
+                            CreatedAt = new DateTimeOffset(new DateTime(2025, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0)),
                             DateOfBirth = "01.01.0001",
                             Email = "admin@email.com",
                             FirstName = "admin",
                             LastName = "admin",
-                            PasswordHash = "$2a$11$wyvkPTEkU0i5Ysxu2GZxruTpJwJAiqVxA4V.tUlULeZfDqdruB..q",
+                            PasswordHash = "$2a$11$7W0.dEc3LeGeNkNVUrB3eunfU1y8Vd/DgUuQtk4Fh59xRW6/c7kRW",
                             Role = "Admin"
                         });
                 });

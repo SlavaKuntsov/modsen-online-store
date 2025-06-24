@@ -43,13 +43,14 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 		builder.HasData(
 			new User
 			{
-				Id = Guid.NewGuid(),
+				Id = Guid.Parse("37FA2711-9D7F-47DA-8741-810FEAAE586D"),
 				Email = "admin@email.com",
-				PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword("qweQWE123"),
+				PasswordHash = "$2a$11$7W0.dEc3LeGeNkNVUrB3eunfU1y8Vd/DgUuQtk4Fh59xRW6/c7kRW",
 				DateOfBirth = DateOnly.MinValue.ToString(),
 				Role = Role.Admin,
 				FirstName = "admin",
-				LastName = "admin"
+				LastName = "admin",
+				CreatedAt = new DateTime(2025, 6, 25)
 			});
 	}
 }
