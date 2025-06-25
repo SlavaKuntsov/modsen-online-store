@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using OnlineStore.Application.Abstractions.Data;
 using OnlineStore.Persistance.DataAccess;
 using Utilities.Auth;
-using Utilities.Service;
 using Utilities.Services;
 
 namespace OnlineStore.Persistance.Extensions;

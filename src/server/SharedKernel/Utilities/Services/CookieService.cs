@@ -1,8 +1,7 @@
 ﻿using Domain.Constants;
-
 using Microsoft.AspNetCore.Http;
 
-namespace Utilities.Service;
+namespace Utilities.Services;
 
 public class CookieService(IHttpContextAccessor httpContextAccessor) : ICookieService
 {
