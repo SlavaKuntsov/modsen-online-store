@@ -14,12 +14,12 @@ public sealed class LoginQueryHandler(
 	IPasswordHash passwordHash) 
 	: IRequestHandler<LoginQuery, UserRoleDto>
 {
-	public async Task<UserRoleDto> Handle(LoginQuery request, CancellationToken cancellationToken)
+	public async Task<UserRoleDto> Handle(LoginQuery request, CancellationToken ct = default)
 	{
 		var existUser = await dbContext.Users
 			.AsNoTracking()
 			.Where(u => u.Email == request.Email)
-			.FirstOrDefaultAsync(cancellationToken);
+			.FirstOrDefaultAsync(ct);
 
 		if (existUser is null)
 			throw new NotFoundException($"User with email '{request.Email}' not found.");

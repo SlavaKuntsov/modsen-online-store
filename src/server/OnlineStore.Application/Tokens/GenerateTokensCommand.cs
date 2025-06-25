@@ -15,7 +15,7 @@ public class GenerateTokensCommandHandler(
 	IJwt jwt)
 	: IRequestHandler<GenerateTokensCommand, AuthDto>
 {
-	public async Task<AuthDto> Handle(GenerateTokensCommand request, CancellationToken cancellationToken)
+	public async Task<AuthDto> Handle(GenerateTokensCommand request, CancellationToken ct = default)
 	{
 		var accessToken = jwt.GenerateAccessToken(request.UserId, request.Role);
 		var newRefreshToken = jwt.GenerateRefreshToken();
@@ -28,7 +28,7 @@ public class GenerateTokensCommandHandler(
 		var existRefreshToken = await dbContext.RefreshTokens
 			.AsNoTracking()
 			.Where(t => t.UserId == request.UserId)
-			.FirstOrDefaultAsync(cancellationToken);
+			.FirstOrDefaultAsync(ct);
 
 		if (existRefreshToken is not null)
 		{
@@ -42,14 +42,14 @@ public class GenerateTokensCommandHandler(
 					s => s
 						.SetProperty(t => t.Token, newRefreshTokenModel.Token)
 						.SetProperty(t => t.ExpiresAt, newRefreshTokenModel.ExpiresAt),
-					cancellationToken);
+					ct);
 		}
 		else
 		{
-			await dbContext.RefreshTokens.AddAsync(newRefreshTokenModel, cancellationToken);
+			await dbContext.RefreshTokens.AddAsync(newRefreshTokenModel, ct);
 		}
 		
-		await dbContext.SaveChangesAsync(cancellationToken);
+		await dbContext.SaveChangesAsync(ct);
 		
 		return new AuthDto(accessToken, newRefreshToken);
 	}

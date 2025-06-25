@@ -1,5 +1,5 @@
 ﻿namespace OnlineStore.Application.Dtos;
 
-public record TokensDto(
+public sealed record TokensDto(
 	string AccessToken,
 	string RefreshToken);
