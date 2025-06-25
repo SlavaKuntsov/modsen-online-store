@@ -5,11 +5,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OnlineStore.Application.Abstractions.Data;
-using OnlineStore.Infrastructure.DataAccess;
+using OnlineStore.Persistance.DataAccess;
 using Utilities.Auth;
 using Utilities.Service;
+using Utilities.Services;
 
-namespace OnlineStore.Infrastructure.Extensions;
+namespace OnlineStore.Persistance.Extensions;
 
 public static class InfrastructureExtensions
 {
@@ -22,6 +23,9 @@ public static class InfrastructureExtensions
 		services.AddScoped<ICookieService, CookieService>();
 		services.AddScoped<IPasswordHash, PasswordHash>();
 		services.AddScoped<IJwt, Jwt>();
+
+		services.AddScoped<IResetPassword, ResetPassword>();
+		services.AddScoped<IEmailService, EmailService>();
 
 		return services;
 	}

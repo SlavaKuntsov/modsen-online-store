@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineStore.Domain.Entities;
 
-namespace OnlineStore.Infrastructure.DataAccess.Configurations;
+namespace OnlineStore.Persistance.DataAccess.Configurations;
 
 
 public class PasswordResetTokenConfiguration : IEntityTypeConfiguration<PasswordResetToken>

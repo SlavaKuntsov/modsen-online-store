@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using OnlineStore.Infrastructure.DataAccess;
+using OnlineStore.Persistance.DataAccess;
 
 #nullable disable
 
-namespace OnlineStore.Infrastructure.DataAccess.Migrations
+namespace OnlineStore.Persistance.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
