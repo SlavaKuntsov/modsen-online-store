@@ -8,7 +8,7 @@ public class LoginRequestExample : IExamplesProvider<LoginQuery>
 	public LoginQuery GetExamples()
 	{
 		return new LoginQuery(
-			"example@email.com",
+			"example@gmail.com",
 			"qweQWE123");
 	}
 }

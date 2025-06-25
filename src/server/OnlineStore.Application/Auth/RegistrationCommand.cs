@@ -23,12 +23,12 @@ public sealed class UserRegistrationCommandHandler(
 {
 	public async Task<AuthDto> Handle(
 		UserRegistrationCommand request,
-		CancellationToken cancellationToken = default)
+		CancellationToken ct = default)
 	{
 		var existUser = await dbContext.Users
 			.AsNoTracking()
 			.Where(u => u.Email == request.Email)
-			.FirstOrDefaultAsync(cancellationToken);
+			.FirstOrDefaultAsync(ct);
 
 		if (existUser is not null)
 			throw new AlreadyExistsException($"User with email {request.Email} already exists");
@@ -52,10 +52,10 @@ public sealed class UserRegistrationCommandHandler(
 			refreshToken,
 			jwt.GetRefreshTokenExpirationDays());
 
-		await dbContext.Users.AddAsync(userEntity, cancellationToken);
-		await dbContext.RefreshTokens.AddAsync(refreshTokenEntity, cancellationToken);
+		await dbContext.Users.AddAsync(userEntity, ct);
+		await dbContext.RefreshTokens.AddAsync(refreshTokenEntity, ct);
 		
-		await dbContext.SaveChangesAsync(cancellationToken);
+		await dbContext.SaveChangesAsync(ct);
 
 		return new AuthDto(accessToken, refreshToken);
 	}

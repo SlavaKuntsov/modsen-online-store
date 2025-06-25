@@ -8,7 +8,7 @@ public class RegistrationRequestExample : IExamplesProvider<UserRegistrationComm
 	public UserRegistrationCommand GetExamples()
 	{
 		return new UserRegistrationCommand(
-			"example@email.com",
+			"example@gmail.com",
 			"qweQWE123",
 			"John",
 			"Doe",
