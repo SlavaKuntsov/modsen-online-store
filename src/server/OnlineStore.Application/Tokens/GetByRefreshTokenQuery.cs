@@ -18,7 +18,12 @@ public sealed class GetByRefreshTokenQueryHandler(
 	{
 		ArgumentNullException.ThrowIfNull(request);
 
-		var userId = await jwt.ValidateRefreshTokenAsync(request.RefreshToken, cancellationToken);
+		var existRefreshToken = await dbContext.RefreshTokens
+			.AsNoTracking()
+			.Where(t => t.Token == request.RefreshToken)
+			.FirstOrDefaultAsync(cancellationToken);
+
+		var userId = jwt.ValidateRefreshTokenAsync(existRefreshToken);
 
 		if (userId == Guid.Empty)
 			throw new InvalidTokenException("Invalid refresh token");

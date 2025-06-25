@@ -1,4 +1,5 @@
 using Domain.Enums;
+using OnlineStore.Domain.Entities;
 
 namespace Utilities.Auth;
 
@@ -8,7 +9,7 @@ public interface IJwt
 
 	public string GenerateRefreshToken();
 
-	public Task<Guid> ValidateRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken);
+	public Guid ValidateRefreshTokenAsync(RefreshToken? existRefreshToken);
 
 	public int GetRefreshTokenExpirationDays();
 }

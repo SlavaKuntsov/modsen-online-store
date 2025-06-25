@@ -83,10 +83,13 @@ public static class AuthorizationExtension
 					policy.RequireRole(Role.Guest.GetDescription());
 				})
 			.AddPolicy(
-				"User&Admin",
+				"All",
 				policy =>
 				{
-					policy.RequireRole(Role.Admin.GetDescription(), Role.User.GetDescription());
+					policy.RequireRole(
+						Role.Admin.GetDescription(), 
+						Role.User.GetDescription(),
+						Role.Guest.GetDescription());
 					policy.AddRequirements(new ActiveAdminRequirement());
 				});
 

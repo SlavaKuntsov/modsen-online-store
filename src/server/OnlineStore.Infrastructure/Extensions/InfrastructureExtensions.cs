@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OnlineStore.Application.Abstractions.Data;
 using OnlineStore.Infrastructure.DataAccess;
-using OnlineStore.Infrastructure.Helpers.Auth;
 using Utilities.Auth;
 using Utilities.Service;
 

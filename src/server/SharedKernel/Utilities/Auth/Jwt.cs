@@ -5,16 +5,13 @@ using System.Text;
 using Common.Authorization;
 using Common.Enums;
 using Domain.Enums;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using OnlineStore.Application.Abstractions.Data;
-using Utilities.Auth;
+using OnlineStore.Domain.Entities;
 
-namespace OnlineStore.Infrastructure.Helpers.Auth;
+namespace Utilities.Auth;
 
-public class Jwt(IOptions<JwtOptions> jwtOptions, IApplicationDbContext dbContext)
-	: IJwt
+public class Jwt(IOptions<JwtOptions> jwtOptions) : IJwt
 {
 	private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
@@ -31,7 +28,7 @@ public class Jwt(IOptions<JwtOptions> jwtOptions, IApplicationDbContext dbContex
 
 		var token = new JwtSecurityToken(
 			claims: claims,
-			expires: DateTime.UtcNow.AddMinutes(_jwtOptions.AccessTokenExpirationMinutes),
+			expires: System.DateTime.UtcNow.AddMinutes(_jwtOptions.AccessTokenExpirationMinutes),
 			signingCredentials: creds);
 
 		return new JwtSecurityTokenHandler().WriteToken(token);
@@ -46,21 +43,16 @@ public class Jwt(IOptions<JwtOptions> jwtOptions, IApplicationDbContext dbContex
 		return Convert.ToBase64String(randomBytes);
 	}
 
-	public async Task<Guid> ValidateRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken)
-	{
-		var storedToken = await dbContext.RefreshTokens
-			.AsNoTracking()
-			.Where(t => t.Token == refreshToken)
-			.FirstOrDefaultAsync(cancellationToken);
-
-		if (storedToken?.UserId == null || storedToken.IsRevoked || storedToken.ExpiresAt < DateTime.UtcNow)
-			return Guid.Empty;
-
-		return storedToken.UserId.Value;
-	}
-
 	public int GetRefreshTokenExpirationDays()
 	{
 		return _jwtOptions.RefreshTokenExpirationDays;
+	}
+
+	public Guid ValidateRefreshTokenAsync(RefreshToken? existRefreshToken)
+	{
+		if (existRefreshToken?.UserId == null || existRefreshToken.IsRevoked || existRefreshToken.ExpiresAt < System.DateTime.UtcNow)
+			return Guid.Empty;
+
+		return existRefreshToken.UserId.Value;
 	}
 }

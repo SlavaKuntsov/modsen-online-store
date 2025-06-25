@@ -44,7 +44,7 @@ public class AuthControllers(
 	}
 
 	[HttpGet("authorize")]
-	[Authorize(Policy = "User&Admin")]
+	[Authorize(Policy = "All")]
 	public async Task<IActionResult> Authorize(CancellationToken cancellationToken)
 	{
 		var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) 
@@ -61,7 +61,7 @@ public class AuthControllers(
 	}
 
 	[HttpGet("unauthorize")]
-	[Authorize(Policy = "User&Admin")]
+	[Authorize(Policy = "All")]
 	public async Task<IActionResult> Unauthorize(CancellationToken cancellationToken)
 	{
 		var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
