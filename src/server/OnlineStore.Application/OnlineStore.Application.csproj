@@ -6,4 +6,14 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\OnlineStore.Domain\OnlineStore.Domain.csproj" />
+      <ProjectReference Include="..\SharedKernel\Utilities\Utilities.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="12.5.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
+    </ItemGroup>
+
 </Project>

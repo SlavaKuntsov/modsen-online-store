@@ -1,35 +1,72 @@
+using Common.Authorization;
+using Common.Common;
+using Common.Exceptions;
+using Common.Swagger;
+using DotNetEnv;
+using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.HttpOverrides;
+using OnlineStore.API.Contracts.Examples;
+using OnlineStore.Application.Extensions;
+using OnlineStore.Infrastructure.Extensions;
+using Serilog;
+using Swashbuckle.AspNetCore.Filters;
 
-namespace OnlineStore.API;
+Env.Load("./../../../.env");
 
-public class Program
-{
-	public static void Main(string[] args)
+var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
+var configuration = builder.Configuration;
+
+builder.Host.UseSerilog(
+	(context, config) =>
+		config.ReadFrom.Configuration(context.Configuration).Enrich.FromLogContext());
+
+services
+	.AddCommon()
+	.AddExceptions()
+	.AddAuthorization(configuration)
+	.AddSwagger();
+
+services
+	.AddApplication()
+	.AddInfrastructure(configuration);
+
+services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+services.AddSwaggerExamplesFromAssemblyOf<RegistrationRequestExample>();
+
+var app = builder.Build();
+
+app.ApplyMigrations();
+
+app.UseExceptionHandler();
+
+app.UseSwagger();
+
+app.UseSwaggerUI(
+	c =>
 	{
-		var builder = WebApplication.CreateBuilder(args);
+		c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web API v1");
+	});
 
-		// Add services to the container.
+app.UseCookiePolicy(
+	new CookiePolicyOptions
+	{
+		MinimumSameSitePolicy = SameSiteMode.None,
+		HttpOnly = HttpOnlyPolicy.Always,
+		Secure = CookieSecurePolicy.Always
+	});
 
-		builder.Services.AddControllers();
-		// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-		builder.Services.AddEndpointsApiExplorer();
-		builder.Services.AddSwaggerGen();
+app.UseHttpsRedirection();
 
-		var app = builder.Build();
+app.UseForwardedHeaders(
+	new ForwardedHeadersOptions
+	{
+		ForwardedHeaders = ForwardedHeaders.All
+	});
+app.UseCors();
 
-		// Configure the HTTP request pipeline.
-		if (app.Environment.IsDevelopment())
-		{
-			app.UseSwagger();
-			app.UseSwaggerUI();
-		}
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
 
-		app.UseHttpsRedirection();
-
-		app.UseAuthorization();
-
-
-		app.MapControllers();
-
-		app.Run();
-	}
-}
+app.Run();
