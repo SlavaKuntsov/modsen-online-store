@@ -1,6 +1,6 @@
 namespace OnlineStore.Application.Dtos;
 
-public record UserDto(
+public sealed record UserDto(
 	Guid Id,
 	string Email,
 	string Role,

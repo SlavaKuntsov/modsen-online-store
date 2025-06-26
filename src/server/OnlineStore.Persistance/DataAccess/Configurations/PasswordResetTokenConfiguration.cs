@@ -2,12 +2,12 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineStore.Domain.Entities;
 
-namespace OnlineStore.Infrastructure.DataAccess.Configurations;
+namespace OnlineStore.Persistance.DataAccess.Configurations;
 
 
-public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
+public class PasswordResetTokenConfiguration : IEntityTypeConfiguration<PasswordResetToken>
 {
-	public void Configure(EntityTypeBuilder<RefreshToken> builder)
+	public void Configure(EntityTypeBuilder<PasswordResetToken> builder)
 	{
 		builder.HasKey(r => r.Id);
 
@@ -27,11 +27,12 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
 		builder.Property(r => r.CreatedAt)
 			.IsRequired();
 
-		builder.Property(r => r.IsRevoked)
+		builder.Property(r => r.IsUsed)
 			.IsRequired();
-
-		builder.HasOne(r => r.User)
-			.WithOne(u => u.RefreshToken)
-			.HasForeignKey<RefreshToken>(r => r.UserId);
+		
+		builder.HasOne(t => t.User)
+			.WithMany() 
+			.HasForeignKey(t => t.UserId)
+			.OnDelete(DeleteBehavior.Cascade);
 	}
 }

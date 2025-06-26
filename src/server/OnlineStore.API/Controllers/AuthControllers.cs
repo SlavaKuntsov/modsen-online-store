@@ -4,13 +4,14 @@ using Domain.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OnlineStore.API.Contracts;
 using OnlineStore.API.Contracts.Examples;
 using OnlineStore.Application.Auth;
 using OnlineStore.Application.Dtos;
 using OnlineStore.Application.Tokens;
 using OnlineStore.Application.Users;
 using Swashbuckle.AspNetCore.Filters;
-using Utilities.Service;
+using Utilities.Services;
 
 namespace OnlineStore.API.Controllers;
 
@@ -23,18 +24,18 @@ public class AuthControllers(
 	: ControllerBase
 {
 	[HttpGet("refresh-token")]
-	public async Task<IActionResult> RefreshToken(CancellationToken cancellationToken)
+	public async Task<IActionResult> RefreshToken(CancellationToken ct)
 	{
 		var refreshToken = cookieService.GetRefreshToken();
 
 		var userRoleDto = await mediator.Send(
 			new GetByRefreshTokenQuery(
 				refreshToken),
-			cancellationToken);
+			ct);
 
 		var authResultDto = await mediator.Send(
 			new GenerateTokensCommand(userRoleDto.Id, userRoleDto.Role),
-			cancellationToken);
+			ct);
 
 		HttpContext.Response.Cookies.Append(
 			JwtConstants.RefreshCookieName,
@@ -45,7 +46,7 @@ public class AuthControllers(
 
 	[HttpGet("authorize")]
 	[Authorize(Policy = "All")]
-	public async Task<IActionResult> Authorize(CancellationToken cancellationToken)
+	public async Task<IActionResult> Authorize(CancellationToken ct)
 	{
 		var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) 
 						?? throw new UnauthorizedAccessException("User ID not found in claims.");
@@ -55,14 +56,14 @@ public class AuthControllers(
 
 		var user = await mediator.Send(
 			new GetUserByIdQuery(userId),
-			cancellationToken);
+			ct);
 
 		return Ok(user);
 	}
 
 	[HttpGet("unauthorize")]
 	[Authorize(Policy = "All")]
-	public async Task<IActionResult> Unauthorize(CancellationToken cancellationToken)
+	public async Task<IActionResult> Unauthorize(CancellationToken ct)
 	{
 		var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
 						?? throw new UnauthorizedAccessException("User ID not found in claims.");
@@ -72,21 +73,21 @@ public class AuthControllers(
 
 		cookieService.DeleteRefreshToken();
 
-		await mediator.Send(new UnauthorizeCommand(userId), cancellationToken);
+		await mediator.Send(new UnauthorizeCommand(userId), ct);
 
 		return Ok();
 	}
 	
 	[HttpPost("login")]
 	[SwaggerRequestExample(typeof(LoginQuery), typeof(LoginRequestExample))]
-	public async Task<IActionResult> Login([FromBody] LoginQuery request, CancellationToken cancellationToken)
+	public async Task<IActionResult> Login([FromBody] LoginQuery request, CancellationToken ct)
 	{
 		var existUser = await mediator.Send(
 			new LoginQuery(request.Email, request.Password),
-			cancellationToken);
+			ct);
 
 		var authResultDto = await mediator.Send(
-			new GenerateTokensCommand(existUser.Id, existUser.Role), cancellationToken);
+			new GenerateTokensCommand(existUser.Id, existUser.Role), ct);
 
 		HttpContext.Response.Cookies.Append(
 			JwtConstants.RefreshCookieName,
@@ -99,12 +100,39 @@ public class AuthControllers(
 
 	[HttpPost("registration")]
 	[SwaggerRequestExample(typeof(UserRegistrationCommand), typeof(RegistrationRequestExample))]
-	public async Task<IActionResult> Registration([FromBody] UserRegistrationCommand request, CancellationToken cancellationToken)
+	public async Task<IActionResult> Registration([FromBody] UserRegistrationCommand request, CancellationToken ct)
 	{
-		var authResultDto = await mediator.Send(request, cancellationToken);
+		var authResultDto = await mediator.Send(request, ct);
 
 		return Ok(new TokensDto(
 			authResultDto.AccessToken,
 			authResultDto.RefreshToken));
+	}
+	
+	[HttpPost("forgot-password")]
+	[SwaggerRequestExample(typeof(ForgotPasswordCommand), typeof(ForgotPasswordExample))]
+	public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand request, CancellationToken ct)
+	{
+		await mediator.Send(request, ct);
+		
+		return Ok(new { message = "If the email exists, a reset link was sent." });
+	}
+
+	[HttpPost("reset-password")]
+	[SwaggerRequestExample(typeof(ResetPasswordRequest), typeof(ResetPasswordExample))]
+	[Authorize(Policy = "All")]
+	public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand request, CancellationToken ct)
+	{
+		var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+						?? throw new UnauthorizedAccessException("User ID not found in claims.");
+
+		if (!Guid.TryParse(userIdClaim.Value, out var userId))
+			throw new UnauthorizedAccessException("Invalid User ID format in claims.");
+
+		var command = request with { UserId = userId };
+		
+		await mediator.Send(command, ct);
+		
+		return Ok();
 	}
 }

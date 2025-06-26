@@ -25,7 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OnlineStore.Application\OnlineStore.Application.csproj" />
-    <ProjectReference Include="..\OnlineStore.Infrastructure\OnlineStore.Infrastructure.csproj" />
+    <ProjectReference Include="..\OnlineStore.Persistance\OnlineStore.Persistance.csproj" />
     <ProjectReference Include="..\SharedKernel\Common\Common.csproj" />
     <ProjectReference Include="..\SharedKernel\Utilities\Utilities.csproj" />
   </ItemGroup>

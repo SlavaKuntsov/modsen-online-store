@@ -14,14 +14,14 @@ public sealed class GetByRefreshTokenQueryHandler(
 	IJwt jwt)
 	: IRequestHandler<GetByRefreshTokenQuery, UserRoleDto>
 {
-	public async Task<UserRoleDto> Handle(GetByRefreshTokenQuery request, CancellationToken cancellationToken)
+	public async Task<UserRoleDto> Handle(GetByRefreshTokenQuery request, CancellationToken ct = default)
 	{
 		ArgumentNullException.ThrowIfNull(request);
 
 		var existRefreshToken = await dbContext.RefreshTokens
 			.AsNoTracking()
 			.Where(t => t.Token == request.RefreshToken)
-			.FirstOrDefaultAsync(cancellationToken);
+			.FirstOrDefaultAsync(ct);
 
 		var userId = jwt.ValidateRefreshTokenAsync(existRefreshToken);
 
@@ -31,7 +31,7 @@ public sealed class GetByRefreshTokenQueryHandler(
 		var userEntity = await dbContext.Users
 			.AsNoTracking()
 			.Where(t => t.Id == userId)
-			.FirstOrDefaultAsync(cancellationToken);
+			.FirstOrDefaultAsync(ct);
 
 		if (userEntity is null)
 			throw new NotFoundException("User not found");

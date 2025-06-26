@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.HttpOverrides;
 using OnlineStore.API.Contracts.Examples;
 using OnlineStore.Application.Extensions;
-using OnlineStore.Infrastructure.Extensions;
+using OnlineStore.Persistance.Extensions;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;
 
-Env.Load("./../../../.env");
+Env.Load("./../../.env");
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;

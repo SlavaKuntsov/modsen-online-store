@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineStore.Domain.Entities;
 
-namespace OnlineStore.Infrastructure.DataAccess.Configurations;
+namespace OnlineStore.Persistance.DataAccess.Configurations;
 
 
 public class UserConfiguration : IEntityTypeConfiguration<User>

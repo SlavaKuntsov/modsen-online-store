@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using OnlineStore.Infrastructure.DataAccess;
+using OnlineStore.Persistance.DataAccess;
 
 #nullable disable
 
-namespace OnlineStore.Infrastructure.DataAccess.Migrations
+namespace OnlineStore.Persistance.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -21,6 +21,44 @@ namespace OnlineStore.Infrastructure.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("OnlineStore.Domain.Entities.PasswordResetToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_used");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("token");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_password_reset_tokens");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_password_reset_tokens_user_id");
+
+                    b.ToTable("password_reset_tokens", (string)null);
+                });
 
             modelBuilder.Entity("OnlineStore.Domain.Entities.RefreshToken", b =>
                 {
@@ -122,6 +160,18 @@ namespace OnlineStore.Infrastructure.DataAccess.Migrations
                             PasswordHash = "$2a$11$7W0.dEc3LeGeNkNVUrB3eunfU1y8Vd/DgUuQtk4Fh59xRW6/c7kRW",
                             Role = "Admin"
                         });
+                });
+
+            modelBuilder.Entity("OnlineStore.Domain.Entities.PasswordResetToken", b =>
+                {
+                    b.HasOne("OnlineStore.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_password_reset_tokens_users_user_id");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("OnlineStore.Domain.Entities.RefreshToken", b =>
