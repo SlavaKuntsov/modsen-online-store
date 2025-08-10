@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 using OnlineStore.Application.Auth;
 using Utilities.Validators;
 
 namespace OnlineStore.Application.Extensions;
 
-public static class ApplicationExtensions
+public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddApplication(this IServiceCollection services)
 	{
@@ -14,6 +15,7 @@ public static class ApplicationExtensions
 				cfg.RegisterServicesFromAssemblyContaining<UserRegistrationCommandHandler>();
 			});
 
+		services.AddValidatorsFromAssemblyContaining<RegistrationCommandValidator>();
 		// services.AddValidatorsFromAssemblyContaining<BaseCommandValidator<UserRegistrationCommand>>();
 		// services
 			// .AddValidatorsFromAssemblyContaining<BaseCommandValidator<UserRegistrationCommandValidator>>();

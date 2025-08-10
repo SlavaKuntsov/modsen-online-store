@@ -24,7 +24,7 @@ public class AuthControllers(
 	: ControllerBase
 {
 	[HttpGet("refresh-token")]
-	public async Task<IActionResult> RefreshToken(CancellationToken ct)
+	public async Task<IActionResult> RefreshToken(CancellationToken ct = default)
 	{
 		var refreshToken = cookieService.GetRefreshToken();
 
@@ -46,7 +46,7 @@ public class AuthControllers(
 
 	[HttpGet("authorize")]
 	[Authorize(Policy = "All")]
-	public async Task<IActionResult> Authorize(CancellationToken ct)
+	public async Task<IActionResult> Authorize(CancellationToken ct = default)
 	{
 		var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) 
 						?? throw new UnauthorizedAccessException("User ID not found in claims.");
@@ -63,7 +63,7 @@ public class AuthControllers(
 
 	[HttpGet("unauthorize")]
 	[Authorize(Policy = "All")]
-	public async Task<IActionResult> Unauthorize(CancellationToken ct)
+	public async Task<IActionResult> Unauthorize(CancellationToken ct = default)
 	{
 		var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
 						?? throw new UnauthorizedAccessException("User ID not found in claims.");
@@ -80,7 +80,7 @@ public class AuthControllers(
 	
 	[HttpPost("login")]
 	[SwaggerRequestExample(typeof(LoginQuery), typeof(LoginRequestExample))]
-	public async Task<IActionResult> Login([FromBody] LoginQuery request, CancellationToken ct)
+	public async Task<IActionResult> Login([FromBody] LoginQuery request, CancellationToken ct = default)
 	{
 		var existUser = await mediator.Send(
 			new LoginQuery(request.Email, request.Password),
@@ -100,7 +100,7 @@ public class AuthControllers(
 
 	[HttpPost("registration")]
 	[SwaggerRequestExample(typeof(UserRegistrationCommand), typeof(RegistrationRequestExample))]
-	public async Task<IActionResult> Registration([FromBody] UserRegistrationCommand request, CancellationToken ct)
+	public async Task<IActionResult> Registration([FromBody] UserRegistrationCommand request, CancellationToken ct = default)
 	{
 		var authResultDto = await mediator.Send(request, ct);
 
@@ -111,7 +111,7 @@ public class AuthControllers(
 	
 	[HttpPost("forgot-password")]
 	[SwaggerRequestExample(typeof(ForgotPasswordCommand), typeof(ForgotPasswordExample))]
-	public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand request, CancellationToken ct)
+	public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand request, CancellationToken ct = default)
 	{
 		await mediator.Send(request, ct);
 		
@@ -121,7 +121,7 @@ public class AuthControllers(
 	[HttpPost("reset-password")]
 	[SwaggerRequestExample(typeof(ResetPasswordRequest), typeof(ResetPasswordExample))]
 	[Authorize(Policy = "All")]
-	public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand request, CancellationToken ct)
+	public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand request, CancellationToken ct = default)
 	{
 		var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
 						?? throw new UnauthorizedAccessException("User ID not found in claims.");

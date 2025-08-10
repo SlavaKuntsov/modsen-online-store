@@ -1,5 +1,6 @@
 ﻿using Domain.Enums;
 using Domain.Exceptions;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OnlineStore.Application.Abstractions.Data;
@@ -19,12 +20,17 @@ public sealed record UserRegistrationCommand(
 public sealed class UserRegistrationCommandHandler(
 	IJwt jwt,
 	IPasswordHash passwordHash,
+	IValidator<UserRegistrationCommand> validator,
 	IApplicationDbContext dbContext) : IRequestHandler<UserRegistrationCommand, AuthDto>
 {
 	public async Task<AuthDto> Handle(
 		UserRegistrationCommand request,
 		CancellationToken ct = default)
 	{
+		var validationResult = await validator.ValidateAsync(request, ct);
+		if (!validationResult.IsValid)
+			throw new ValidationException(validationResult.Errors);
+		
 		var existUser = await dbContext.Users
 			.AsNoTracking()
 			.Where(u => u.Email == request.Email)
