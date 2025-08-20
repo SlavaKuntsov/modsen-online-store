@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.API.Contracts;
 using OnlineStore.Application.Categories;
@@ -19,8 +20,9 @@ public class CategoryController(IMediator mediator) : ControllerBase
 		return Ok(new ApiResponse<List<CategoryDto>>(StatusCodes.Status200OK, categories, categories.Count));
 	}
 
-	[HttpPost]
-	public async Task<IActionResult> Create([FromBody] CreateCategoryRequest request, CancellationToken ct = default)
+        [HttpPost]
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> Create([FromBody] CreateCategoryRequest request, CancellationToken ct = default)
 	{
 		Guid? parentId = string.IsNullOrWhiteSpace(request.ParentCategoryId)
 			? null
@@ -31,8 +33,9 @@ public class CategoryController(IMediator mediator) : ControllerBase
 				new ApiResponse<CategoryDto>(StatusCodes.Status201Created, category, 1));
 	}
 
-	[HttpPut("{id:guid}")]
-	public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryRequest request, CancellationToken ct = default)
+        [HttpPut("{id:guid}")]
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryRequest request, CancellationToken ct = default)
 	{
 		Guid? parentId = string.IsNullOrWhiteSpace(request.ParentCategoryId)
 			? null
@@ -42,8 +45,9 @@ public class CategoryController(IMediator mediator) : ControllerBase
 		return Ok(new ApiResponse<CategoryDto>(StatusCodes.Status200OK, category, 1));
 	}
 
-	[HttpDelete("{id:guid}")]
-	public async Task<IActionResult> Delete(Guid id, [FromQuery] bool deleteAll = false, CancellationToken ct = default)
+        [HttpDelete("{id:guid}")]
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> Delete(Guid id, [FromQuery] bool deleteAll = false, CancellationToken ct = default)
 	{
 		await mediator.Send(new DeleteCategoryCommand(id, deleteAll), ct);
 		return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Deleted", 0));
