@@ -1,6 +1,7 @@
 using Common.Authorization;
 using Common.Common;
 using Common.Exceptions;
+using Common.Mapper;
 using Common.Swagger;
 using DotNetEnv;
 using Microsoft.AspNetCore.CookiePolicy;
@@ -22,10 +23,11 @@ builder.Host.UseSerilog(
 		config.ReadFrom.Configuration(context.Configuration).Enrich.FromLogContext());
 
 services
-	.AddCommon()
-	.AddExceptions()
-	.AddAuthorization(configuration)
-	.AddSwagger();
+        .AddCommon()
+        .AddExceptions()
+        .AddAuthorization(configuration)
+        .AddSwagger()
+        .AddMapper();
 
 services
 	.AddApplication()
