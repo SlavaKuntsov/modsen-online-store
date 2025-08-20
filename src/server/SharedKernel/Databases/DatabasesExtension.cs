@@ -6,45 +6,45 @@ namespace Databases;
 
 public static class DatabasesExtension
 {
-    public static IServiceCollection AddPostgres<TContextImplementation>(
-        this IServiceCollection services,
-        IConfiguration configuration) where TContextImplementation : DbContext
-    {
-        var name = typeof(TContextImplementation).Name;
+	public static IServiceCollection AddPostgres<TContextImplementation>(
+		this IServiceCollection services,
+		IConfiguration configuration) where TContextImplementation : DbContext
+	{
+		var name = typeof(TContextImplementation).Name;
 
-        var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
-                                ?? configuration.GetConnectionString(name);
+		var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
+								?? configuration.GetConnectionString(name);
 
-        services.AddDbContextPool<TContextImplementation>(
-            options =>
-            {
-                options.UseNpgsql(connectionString);
-                options.UseSnakeCaseNamingConvention();
-            },
-            128);
+		services.AddDbContextPool<TContextImplementation>(
+			options =>
+			{
+				options.UseNpgsql(connectionString);
+				options.UseSnakeCaseNamingConvention();
+			},
+			128);
 
-        return services;
-    }
+		return services;
+	}
 
-    public static IServiceCollection AddPostgres<TContextService, TContextImplementation>(
-        this IServiceCollection services,
-        IConfiguration configuration)
-        where TContextImplementation : DbContext, TContextService
-        where TContextService : class
-    {
-        var name = typeof(TContextImplementation).Name;
+	public static IServiceCollection AddPostgres<TContextService, TContextImplementation>(
+		this IServiceCollection services,
+		IConfiguration configuration)
+		where TContextImplementation : DbContext, TContextService
+		where TContextService : class
+	{
+		var name = typeof(TContextImplementation).Name;
 
-        var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
-                                ?? configuration.GetConnectionString(name);
+		var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING")
+								?? configuration.GetConnectionString(name);
 
-        services.AddDbContextPool<TContextService, TContextImplementation>(
-            options =>
-            {
-                options.UseNpgsql(connectionString);
-                options.UseSnakeCaseNamingConvention();
-            },
-            128);
+		services.AddDbContextPool<TContextService, TContextImplementation>(
+			options =>
+			{
+				options.UseNpgsql(connectionString);
+				options.UseSnakeCaseNamingConvention();
+			},
+			128);
 
-        return services;
-    }
+		return services;
+	}
 }

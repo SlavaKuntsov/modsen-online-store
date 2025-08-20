@@ -5,10 +5,10 @@ namespace Common.Exceptions;
 
 public static class ExceptionsExtension
 {
-    public static IServiceCollection AddExceptions(this IServiceCollection services)
-    {
-        services.AddExceptionHandler<GlobalExceptionHandler>();
+	public static IServiceCollection AddExceptions(this IServiceCollection services)
+	{
+		services.AddExceptionHandler<GlobalExceptionHandler>();
 
-        return services;
-    }
+		return services;
+	}
 }

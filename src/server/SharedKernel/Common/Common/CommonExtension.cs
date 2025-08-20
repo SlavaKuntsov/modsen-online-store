@@ -4,16 +4,16 @@ namespace Common.Common;
 
 public static class CommonExtension
 {
-    public static IServiceCollection AddCommon(this IServiceCollection services)
-    {
-        services.AddProblemDetails();
+	public static IServiceCollection AddCommon(this IServiceCollection services)
+	{
+		services.AddProblemDetails();
 
-        services.AddHttpContextAccessor();
+		services.AddHttpContextAccessor();
 
-        services.AddControllers();
+		services.AddControllers();
 
-        services.AddEndpointsApiExplorer();
+		services.AddEndpointsApiExplorer();
 
-        return services;
-    }
+		return services;
+	}
 }
