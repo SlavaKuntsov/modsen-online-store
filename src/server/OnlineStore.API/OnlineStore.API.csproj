@@ -1,33 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>f758d234-551b-48e6-8574-dede2b347dab</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>f758d234-551b-48e6-8574-dede2b347dab</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
-    <PackageReference Include="DotNetEnv" Version="3.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.17" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.6">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="9.0.0" />
-  </ItemGroup>
+	<Target Name="FormatCode" BeforeTargets="Build">
+		<Exec Command="dotnet format $(SolutionDir)OnlineStore.sln"/>
+	</Target>
 
-  <ItemGroup>
-    <ProjectReference Include="..\OnlineStore.Application\OnlineStore.Application.csproj" />
-    <ProjectReference Include="..\OnlineStore.Persistance\OnlineStore.Persistance.csproj" />
-    <ProjectReference Include="..\SharedKernel\Common\Common.csproj" />
-    <ProjectReference Include="..\SharedKernel\Utilities\Utilities.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0"/>
+		<PackageReference Include="DotNetEnv" Version="3.1.1"/>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.17"/>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.6">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0"/>
+		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0"/>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.4"/>
+		<PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="9.0.0"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\OnlineStore.Application\OnlineStore.Application.csproj"/>
+		<ProjectReference Include="..\OnlineStore.Persistance\OnlineStore.Persistance.csproj"/>
+		<ProjectReference Include="..\SharedKernel\Common\Common.csproj"/>
+		<ProjectReference Include="..\SharedKernel\Utilities\Utilities.csproj"/>
+	</ItemGroup>
 
 </Project>

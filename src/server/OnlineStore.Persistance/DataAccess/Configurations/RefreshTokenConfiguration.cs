@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineStore.Domain.Entities;
 
 namespace OnlineStore.Persistance.DataAccess.Configurations;
-
 
 public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
 {

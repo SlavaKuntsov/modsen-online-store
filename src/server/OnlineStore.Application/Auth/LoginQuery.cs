@@ -1,4 +1,4 @@
-﻿using Domain.Exceptions;
+using Domain.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OnlineStore.Application.Abstractions.Data;
@@ -11,7 +11,7 @@ public sealed record LoginQuery(string Email, string Password) : IRequest<UserRo
 
 public sealed class LoginQueryHandler(
 	IApplicationDbContext dbContext,
-	IPasswordHash passwordHash) 
+	IPasswordHash passwordHash)
 	: IRequestHandler<LoginQuery, UserRoleDto>
 {
 	public async Task<UserRoleDto> Handle(LoginQuery request, CancellationToken ct = default)

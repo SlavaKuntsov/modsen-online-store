@@ -42,7 +42,7 @@ public sealed class ForgotPasswordCommandHandler(
 		await dbContext.PasswordResetTokens.AddAsync(tokenEntity, ct);
 
 		await dbContext.SaveChangesAsync(ct);
-		
+
 		// var resetLink = $"https://frontend.example.com/reset-password?userId={user.Id}&token={Uri.EscapeDataString(token)}";
 		var resetLink = tokenValue;
 

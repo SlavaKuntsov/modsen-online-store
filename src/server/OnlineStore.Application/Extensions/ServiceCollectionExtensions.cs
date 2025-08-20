@@ -1,7 +1,6 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineStore.Application.Auth;
-using Utilities.Validators;
 
 namespace OnlineStore.Application.Extensions;
 
@@ -18,7 +17,7 @@ public static class ServiceCollectionExtensions
 		services.AddValidatorsFromAssemblyContaining<RegistrationCommandValidator>();
 		// services.AddValidatorsFromAssemblyContaining<BaseCommandValidator<UserRegistrationCommand>>();
 		// services
-			// .AddValidatorsFromAssemblyContaining<BaseCommandValidator<UserRegistrationCommandValidator>>();
+		// .AddValidatorsFromAssemblyContaining<BaseCommandValidator<UserRegistrationCommandValidator>>();
 
 		return services;
 	}

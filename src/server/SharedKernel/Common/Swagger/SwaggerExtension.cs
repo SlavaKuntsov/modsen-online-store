@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -24,7 +24,7 @@ public static class SwaggerExtension
 				options.GroupNameFormat = "'v'VVV";
 				options.SubstituteApiVersionInUrl = true;
 			});
-		
+
 		services.AddSwaggerGen(
 			options =>
 			{

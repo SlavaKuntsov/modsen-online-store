@@ -1,4 +1,4 @@
-﻿using CSharpFunctionalExtensions;
+using CSharpFunctionalExtensions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
@@ -22,12 +22,16 @@ internal sealed class RequestLoggingPipelineBehavior<TRequest, TResponse>(ILogge
 		var result = await next();
 
 		if (result.IsSuccess)
+		{
 			logger.LogInformation("Completed request {RequestName}", requestName);
+		}
 		else
+		{
 			using (LogContext.PushProperty("Error", result.Error, true))
 			{
 				logger.LogError("Completed request {RequestName} with error", requestName);
 			}
+		}
 
 		return result;
 	}

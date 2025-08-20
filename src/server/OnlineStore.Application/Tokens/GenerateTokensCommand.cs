@@ -1,4 +1,4 @@
-﻿using Domain.Enums;
+using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OnlineStore.Application.Abstractions.Data;
@@ -35,7 +35,7 @@ public class GenerateTokensCommandHandler(
 			// existRefreshToken.Token = newRefreshTokenModel.Token;
 			// existRefreshToken.ExpiresAt = newRefreshTokenModel.ExpiresAt;
 			// dbContext.RefreshTokens.Attach(existRefreshToken).State = EntityState.Modified;
-		
+
 			await dbContext.RefreshTokens
 				.Where(t => t.Id == existRefreshToken.Id)
 				.ExecuteUpdateAsync(
@@ -48,9 +48,9 @@ public class GenerateTokensCommandHandler(
 		{
 			await dbContext.RefreshTokens.AddAsync(newRefreshTokenModel, ct);
 		}
-		
+
 		await dbContext.SaveChangesAsync(ct);
-		
+
 		return new AuthDto(accessToken, newRefreshToken);
 	}
 }

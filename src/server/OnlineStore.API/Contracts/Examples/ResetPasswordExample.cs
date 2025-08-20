@@ -2,7 +2,7 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace OnlineStore.API.Contracts.Examples;
 
-public class ResetPasswordExample: IExamplesProvider<ResetPasswordRequest>
+public class ResetPasswordExample : IExamplesProvider<ResetPasswordRequest>
 {
 	public ResetPasswordRequest GetExamples()
 	{

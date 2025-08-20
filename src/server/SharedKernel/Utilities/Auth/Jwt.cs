@@ -1,4 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -52,7 +52,9 @@ public class Jwt(IOptions<JwtOptions> jwtOptions) : IJwt
 	{
 		if (existRefreshToken?.UserId == null || existRefreshToken.IsRevoked ||
 			existRefreshToken.ExpiresAt < System.DateTime.UtcNow)
+		{
 			return Guid.Empty;
+		}
 
 		return existRefreshToken.UserId.Value;
 	}

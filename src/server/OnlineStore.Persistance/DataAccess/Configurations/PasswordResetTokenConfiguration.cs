@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineStore.Domain.Entities;
 
 namespace OnlineStore.Persistance.DataAccess.Configurations;
-
 
 public class PasswordResetTokenConfiguration : IEntityTypeConfiguration<PasswordResetToken>
 {
@@ -29,9 +28,9 @@ public class PasswordResetTokenConfiguration : IEntityTypeConfiguration<Password
 
 		builder.Property(r => r.IsUsed)
 			.IsRequired();
-		
+
 		builder.HasOne(t => t.User)
-			.WithMany() 
+			.WithMany()
 			.HasForeignKey(t => t.UserId)
 			.OnDelete(DeleteBehavior.Cascade);
 	}

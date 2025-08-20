@@ -1,4 +1,4 @@
-﻿using Domain.Exceptions;
+using Domain.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OnlineStore.Application.Abstractions.Data;

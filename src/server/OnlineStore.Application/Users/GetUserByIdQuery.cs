@@ -1,4 +1,4 @@
-﻿using Common.Enums;
+using Common.Enums;
 using Domain.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

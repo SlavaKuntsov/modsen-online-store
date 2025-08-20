@@ -1,4 +1,4 @@
-﻿namespace Domain.DTOs;
+namespace Domain.DTOs;
 
 public struct FilterDto
 {
