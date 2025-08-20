@@ -31,15 +31,27 @@ public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApp
 
 	public async Task<Cart> AddItemAsync(Guid productId, int quantity)
 	{
+		if (quantity <= 0)
+		{
+			throw new ArgumentException("Quantity must be greater than zero");
+		}
+
 		var cart = await GetCartAsync();
+		var product = await dbContext.Products.FindAsync(productId);
+		if (product is null)
+		{
+			throw new ArgumentException("Product not found");
+		}
+
 		var item = cart.Items.FirstOrDefault(i => i.ProductId == productId);
+		var newQuantity = (item?.Quantity ?? 0) + quantity;
+		if (newQuantity > product.StockQuantity)
+		{
+			throw new InvalidOperationException("Insufficient stock");
+		}
+
 		if (item is null)
 		{
-			var product = await dbContext.Products.FindAsync(productId);
-			if (product is null)
-			{
-				throw new ArgumentException("Product not found");
-			}
 			cart.Items.Add(new CartItem
 			{
 				ProductId = product.Id,
@@ -50,17 +62,28 @@ public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApp
 		}
 		else
 		{
-			item.Quantity += quantity;
+			item.Quantity = newQuantity;
 		}
 		Save(cart);
 		return cart;
 	}
 
-	public async Task<Cart> RemoveItemAsync(Guid productId)
+	public async Task<Cart> RemoveItemAsync(Guid productId, int quantity)
 	{
 		var cart = await GetCartAsync();
-		cart.Items.RemoveAll(i => i.ProductId == productId);
-		Save(cart);
+		var item = cart.Items.FirstOrDefault(i => i.ProductId == productId);
+		if (item is not null)
+		{
+			if (quantity <= 0 || quantity >= item.Quantity)
+			{
+				cart.Items.Remove(item);
+			}
+			else
+			{
+				item.Quantity -= quantity;
+			}
+			Save(cart);
+		}
 		return cart;
 	}
 
@@ -78,8 +101,65 @@ public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApp
 		}
 		else
 		{
+			var product = await dbContext.Products.FindAsync(productId);
+			if (product is null)
+			{
+				throw new ArgumentException("Product not found");
+			}
+			if (quantity > product.StockQuantity)
+			{
+				throw new InvalidOperationException("Insufficient stock");
+			}
 			item.Quantity = quantity;
 		}
+		Save(cart);
+		return cart;
+	}
+
+	public async Task<Cart> ReplaceItemsAsync(IEnumerable<(Guid productId, int quantity)> items)
+	{
+		var cart = await GetCartAsync();
+		var requested = items.ToList();
+		var allowed = requested.Select(i => i.productId).ToHashSet();
+
+		cart.Items.RemoveAll(i => !allowed.Contains(i.ProductId));
+
+		foreach (var (productId, quantity) in requested)
+		{
+			if (quantity <= 0)
+			{
+				cart.Items.RemoveAll(i => i.ProductId == productId);
+				continue;
+			}
+
+			var product = await dbContext.Products.FindAsync(productId);
+			if (product is null)
+			{
+				throw new ArgumentException($"Product {productId} not found");
+			}
+			if (quantity > product.StockQuantity)
+			{
+				throw new InvalidOperationException("Insufficient stock");
+			}
+			var existing = cart.Items.FirstOrDefault(i => i.ProductId == productId);
+			if (existing is null)
+			{
+				cart.Items.Add(new CartItem
+				{
+					ProductId = product.Id,
+					ProductName = product.Name,
+					UnitPrice = product.Price,
+					Quantity = quantity
+				});
+			}
+			else
+			{
+				existing.ProductName = product.Name;
+				existing.UnitPrice = product.Price;
+				existing.Quantity = quantity;
+			}
+		}
+
 		Save(cart);
 		return cart;
 	}
