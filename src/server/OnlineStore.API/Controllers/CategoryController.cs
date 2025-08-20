@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OnlineStore.API.Contracts;
 using OnlineStore.Application.Categories;
 
 namespace OnlineStore.API.Controllers;
@@ -18,24 +19,31 @@ public class CategoryController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateCategoryCommand request, CancellationToken ct = default)
+    public async Task<IActionResult> Create([FromBody] CreateCategoryRequest request, CancellationToken ct = default)
     {
-        var category = await mediator.Send(request, ct);
+        Guid? parentId = string.IsNullOrWhiteSpace(request.ParentCategoryId)
+            ? null
+            : Guid.Parse(request.ParentCategoryId);
+
+        var category = await mediator.Send(new CreateCategoryCommand(request.Name, parentId), ct);
         return Ok(category);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryCommand request, CancellationToken ct = default)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryRequest request, CancellationToken ct = default)
     {
-        var command = request with { Id = id };
-        var category = await mediator.Send(command, ct);
+        Guid? parentId = string.IsNullOrWhiteSpace(request.ParentCategoryId)
+            ? null
+            : Guid.Parse(request.ParentCategoryId);
+
+        var category = await mediator.Send(new UpdateCategoryCommand(id, request.Name, parentId), ct);
         return Ok(category);
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken ct = default)
+    public async Task<IActionResult> Delete(Guid id, [FromQuery] bool deleteAll = false, CancellationToken ct = default)
     {
-        await mediator.Send(new DeleteCategoryCommand(id), ct);
+        await mediator.Send(new DeleteCategoryCommand(id, deleteAll), ct);
         return NoContent();
     }
 }
