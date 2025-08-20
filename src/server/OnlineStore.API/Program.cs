@@ -1,11 +1,14 @@
 using Common.Authorization;
 using Common.Common;
 using Common.Exceptions;
+using Common.Mapper;
 using Common.Swagger;
 using DotNetEnv;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using OnlineStore.API.Contracts.Examples;
+using OnlineStore.API.Converters;
 using OnlineStore.Application.Extensions;
 using OnlineStore.Persistance.Extensions;
 using Serilog;
@@ -22,10 +25,11 @@ builder.Host.UseSerilog(
 		config.ReadFrom.Configuration(context.Configuration).Enrich.FromLogContext());
 
 services
-	.AddCommon()
-	.AddExceptions()
-	.AddAuthorization(configuration)
-	.AddSwagger();
+        .AddCommon()
+        .AddExceptions()
+        .AddAuthorization(configuration)
+        .AddSwagger()
+        .AddMapper();
 
 services
 	.AddApplication()
@@ -33,6 +37,11 @@ services
 
 services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 services.AddSwaggerExamplesFromAssemblyOf<RegistrationRequestExample>();
+
+services.Configure<JsonOptions>(options =>
+{
+        options.JsonSerializerOptions.Converters.Add(new EmptyStringToNullableGuidConverter());
+});
 
 var app = builder.Build();
 
