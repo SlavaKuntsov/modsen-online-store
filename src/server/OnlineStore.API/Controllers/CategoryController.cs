@@ -29,7 +29,7 @@ public class CategoryController(IMediator mediator) : ControllerBase
 		return Ok(category);
 	}
 
-	[HttpPut("{id}")]
+	[HttpPut("{id:guid}")]
 	public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryRequest request, CancellationToken ct = default)
 	{
 		Guid? parentId = string.IsNullOrWhiteSpace(request.ParentCategoryId)
@@ -40,7 +40,7 @@ public class CategoryController(IMediator mediator) : ControllerBase
 		return Ok(category);
 	}
 
-	[HttpDelete("{id}")]
+	[HttpDelete("{id:guid}")]
 	public async Task<IActionResult> Delete(Guid id, [FromQuery] bool deleteAll = false, CancellationToken ct = default)
 	{
 		await mediator.Send(new DeleteCategoryCommand(id, deleteAll), ct);
