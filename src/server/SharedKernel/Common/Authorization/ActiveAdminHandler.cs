@@ -1,9 +1,6 @@
-﻿using System.Security.Claims;
-
-using Domain.Enums;
-
+using System.Security.Claims;
 using Common.Enums;
-
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Common.Authorization;

@@ -1,4 +1,4 @@
-﻿using Domain.Enums;
+using Domain.Enums;
 using Domain.Exceptions;
 using FluentValidation;
 using MediatR;
@@ -30,7 +30,7 @@ public sealed class UserRegistrationCommandHandler(
 		var validationResult = await validator.ValidateAsync(request, ct);
 		if (!validationResult.IsValid)
 			throw new ValidationException(validationResult.Errors);
-		
+
 		var existUser = await dbContext.Users
 			.AsNoTracking()
 			.Where(u => u.Email == request.Email)
@@ -60,7 +60,7 @@ public sealed class UserRegistrationCommandHandler(
 
 		await dbContext.Users.AddAsync(userEntity, ct);
 		await dbContext.RefreshTokens.AddAsync(refreshTokenEntity, ct);
-		
+
 		await dbContext.SaveChangesAsync(ct);
 
 		return new AuthDto(accessToken, refreshToken);

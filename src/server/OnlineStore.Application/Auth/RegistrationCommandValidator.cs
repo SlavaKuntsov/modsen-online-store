@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Domain.Constants;
 using FluentValidation;
 using Utilities.Validators;
@@ -58,7 +58,7 @@ public class RegistrationCommandValidator : BaseCommandValidator<UserRegistratio
 		return DateTime.TryParseExact(
 			dob,
 			DateTimeConstants.DateFormat,
-			CultureInfo.InvariantCulture,  
+			CultureInfo.InvariantCulture,
 			DateTimeStyles.None,
 			out _);
 	}
@@ -71,7 +71,9 @@ public class RegistrationCommandValidator : BaseCommandValidator<UserRegistratio
 				CultureInfo.InvariantCulture,
 				DateTimeStyles.None,
 				out var date))
+		{
 			return false;
+		}
 
 		var today = DateTime.UtcNow.Date;
 		var age = today.Year - date.Year;

@@ -1,4 +1,4 @@
-﻿using Domain.Constants;
+using Domain.Constants;
 using Microsoft.AspNetCore.Http;
 
 namespace Utilities.Services;
@@ -20,7 +20,7 @@ public class CookieService(IHttpContextAccessor httpContextAccessor) : ICookieSe
 
 	public void DeleteRefreshToken()
 	{
-		var httpContext = httpContextAccessor.HttpContext 
+		var httpContext = httpContextAccessor.HttpContext
 			?? throw new InvalidOperationException("No active HTTP context available.");
 
 		httpContext.Response.Cookies.Delete(JwtConstants.RefreshCookieName);

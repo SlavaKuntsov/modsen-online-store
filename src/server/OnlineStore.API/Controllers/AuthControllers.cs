@@ -48,7 +48,7 @@ public class AuthControllers(
 	[Authorize(Policy = "All")]
 	public async Task<IActionResult> Authorize(CancellationToken ct = default)
 	{
-		var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) 
+		var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
 						?? throw new UnauthorizedAccessException("User ID not found in claims.");
 
 		if (!Guid.TryParse(userIdClaim.Value, out var userId))
@@ -77,7 +77,7 @@ public class AuthControllers(
 
 		return Ok();
 	}
-	
+
 	[HttpPost("login")]
 	[SwaggerRequestExample(typeof(LoginQuery), typeof(LoginRequestExample))]
 	public async Task<IActionResult> Login([FromBody] LoginQuery request, CancellationToken ct = default)
@@ -108,13 +108,13 @@ public class AuthControllers(
 			authResultDto.AccessToken,
 			authResultDto.RefreshToken));
 	}
-	
+
 	[HttpPost("forgot-password")]
 	[SwaggerRequestExample(typeof(ForgotPasswordCommand), typeof(ForgotPasswordExample))]
 	public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand request, CancellationToken ct = default)
 	{
 		await mediator.Send(request, ct);
-		
+
 		return Ok(new { message = "If the email exists, a reset link was sent." });
 	}
 
@@ -130,9 +130,9 @@ public class AuthControllers(
 			throw new UnauthorizedAccessException("Invalid User ID format in claims.");
 
 		var command = request with { UserId = userId };
-		
+
 		await mediator.Send(command, ct);
-		
+
 		return Ok();
 	}
 }

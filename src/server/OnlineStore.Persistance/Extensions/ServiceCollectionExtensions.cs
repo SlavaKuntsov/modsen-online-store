@@ -1,4 +1,4 @@
-﻿using Databases;
+using Databases;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineStore.Application.Abstractions.Data;

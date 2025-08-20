@@ -1,6 +1,6 @@
-﻿using System.Text;
-using Domain.Enums;
+using System.Text;
 using Common.Enums;
+using Domain.Enums;
 using Domain.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -18,9 +18,9 @@ public static class AuthorizationExtension
 	{
 		services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
 		services.Configure<EmailOptions>(configuration.GetSection(nameof(EmailOptions)));
-		
+
 		var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
-		
+
 		services
 			.AddAuthentication(options =>
 			{
@@ -33,7 +33,7 @@ public static class AuthorizationExtension
 				{
 					options.RequireHttpsMetadata = true;
 					options.SaveToken = true;
-		
+
 					options.TokenValidationParameters = new TokenValidationParameters
 					{
 						ValidateIssuer = false,
@@ -43,14 +43,14 @@ public static class AuthorizationExtension
 						IssuerSigningKey = new SymmetricSecurityKey(
 							Encoding.UTF8.GetBytes(jwtOptions!.SecretKey))
 					};
-		
+
 					options.Events = new JwtBearerEvents
 					{
 						OnAuthenticationFailed = _ => Task.CompletedTask,
 						OnTokenValidated = _ => Task.CompletedTask
 					};
 				});
-		
+
 		services.Configure<AuthorizationOptions>(
 			configuration.GetSection(nameof(AuthorizationOptions)));
 
@@ -89,7 +89,7 @@ public static class AuthorizationExtension
 				policy =>
 				{
 					policy.RequireRole(
-						Role.Admin.GetDescription(), 
+						Role.Admin.GetDescription(),
 						Role.User.GetDescription(),
 						Role.Guest.GetDescription());
 					policy.AddRequirements(new ActiveAdminRequirement());
