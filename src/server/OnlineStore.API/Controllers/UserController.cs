@@ -3,7 +3,9 @@ using Asp.Versioning;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OnlineStore.API.Contracts;
 using OnlineStore.Application.Dtos;
 using OnlineStore.Application.Users;
 
@@ -27,10 +29,12 @@ public class UserController(IMediator mediator, IMapper mapper)
 		if (!Guid.TryParse(userIdClaim.Value, out var userId))
 			throw new UnauthorizedAccessException("Invalid User ID format in claims.");
 
-		var command = request with { Id = userId };
+                var command = request with { Id = userId };
 
-		var user = await mediator.Send(command, ct);
+                var user = await mediator.Send(command, ct);
 
-		return Ok(mapper.Map<UserDto>(user));
-	}
+                var dto = mapper.Map<UserDto>(user);
+
+                return Ok(new ApiResponse<UserDto>(StatusCodes.Status200OK, dto, 1));
+        }
 }
