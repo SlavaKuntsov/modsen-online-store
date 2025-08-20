@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using OnlineStore.Application.Abstractions.Data;
 using OnlineStore.Domain.Entities;
@@ -11,22 +12,32 @@ public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApp
 
 	public async Task<Cart> GetCartAsync()
 	{
-		var key = GetCacheKey();
-		if (!cache.TryGetValue(key, out Cart? cart))
+		var context = accessor.HttpContext!;
+		if (context.User.Identity?.IsAuthenticated == true)
 		{
-			cart = new Cart();
-			var context = accessor.HttpContext!;
-			if (context.User.Identity?.IsAuthenticated == true)
+			var id = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (Guid.TryParse(id, out var userId))
 			{
-				var id = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-				if (Guid.TryParse(id, out var userId))
+				var cart = await dbContext.Carts
+						.Include(c => c.Items)
+						.SingleOrDefaultAsync(c => c.UserId == userId);
+				if (cart is null)
 				{
-					cart.UserId = userId;
+					cart = new Cart { UserId = userId };
+					await dbContext.Carts.AddAsync(cart);
+					await dbContext.SaveChangesAsync();
 				}
+				return cart;
 			}
-			cache.Set(key, cart, TimeSpan.FromHours(1));
 		}
-		return cart;
+
+		var key = GetGuestKey();
+		if (!cache.TryGetValue(key, out Cart? guestCart))
+		{
+			guestCart = new Cart();
+			cache.Set(key, guestCart, TimeSpan.FromHours(1));
+		}
+		return guestCart;
 	}
 
 	public async Task<Cart> AddItemAsync(Guid productId, int quantity)
@@ -64,7 +75,7 @@ public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApp
 		{
 			item.Quantity = newQuantity;
 		}
-		Save(cart);
+		await SaveAsync(cart);
 		return cart;
 	}
 
@@ -82,7 +93,7 @@ public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApp
 			{
 				item.Quantity -= quantity;
 			}
-			Save(cart);
+			await SaveAsync(cart);
 		}
 		return cart;
 	}
@@ -112,7 +123,7 @@ public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApp
 			}
 			item.Quantity = quantity;
 		}
-		Save(cart);
+		await SaveAsync(cart);
 		return cart;
 	}
 
@@ -160,18 +171,13 @@ public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApp
 			}
 		}
 
-		Save(cart);
+		await SaveAsync(cart);
 		return cart;
 	}
 
-	private string GetCacheKey()
+	private string GetGuestKey()
 	{
 		var context = accessor.HttpContext!;
-		if (context.User.Identity?.IsAuthenticated == true)
-		{
-			var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-			return $"cart:user:{userId}";
-		}
 		if (!context.Request.Cookies.TryGetValue(CartCookie, out var cartId))
 		{
 			cartId = Guid.NewGuid().ToString();
@@ -185,9 +191,16 @@ public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApp
 		return $"cart:guest:{cartId}";
 	}
 
-	private void Save(Cart cart)
+	private async Task SaveAsync(Cart cart)
 	{
-		var key = GetCacheKey();
-		cache.Set(key, cart, TimeSpan.FromHours(1));
+		if (cart.UserId.HasValue)
+		{
+			await dbContext.SaveChangesAsync();
+		}
+		else
+		{
+			var key = GetGuestKey();
+			cache.Set(key, cart, TimeSpan.FromHours(1));
+		}
 	}
 }

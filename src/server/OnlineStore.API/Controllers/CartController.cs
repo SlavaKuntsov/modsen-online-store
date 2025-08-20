@@ -40,13 +40,6 @@ public class CartController(ICartService cartService) : ControllerBase
 		return Ok(new ApiResponse<CartDto>(StatusCodes.Status200OK, Map(cart), cart.Items.Count));
 	}
 
-	[HttpDelete("items")]
-	public async Task<IActionResult> RemoveItem([FromBody] RemoveCartItemRequest request)
-	{
-		var cart = await cartService.RemoveItemAsync(request.ProductId, request.Quantity);
-		return Ok(new ApiResponse<CartDto>(StatusCodes.Status200OK, Map(cart), cart.Items.Count));
-	}
-
 	private static CartDto Map(Cart cart)
 	{
 		var items = cart.Items.Select(i => new CartItemDto(i.ProductId, i.ProductName, i.UnitPrice, i.Quantity, i.UnitPrice * i.Quantity)).ToList();

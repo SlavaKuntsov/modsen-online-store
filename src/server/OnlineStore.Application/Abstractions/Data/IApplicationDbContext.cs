@@ -10,6 +10,7 @@ public interface IApplicationDbContext
 	DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 	DbSet<Category> Categories { get; set; }
 	DbSet<Product> Products { get; set; }
+	DbSet<Cart> Carts { get; set; }
 
 	Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
