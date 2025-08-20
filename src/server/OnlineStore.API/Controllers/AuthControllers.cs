@@ -38,10 +38,11 @@ public class AuthControllers(
 			ct);
 
 		HttpContext.Response.Cookies.Append(
-			JwtConstants.RefreshCookieName,
-			authResultDto.RefreshToken);
+				JwtConstants.RefreshCookieName,
+				authResultDto.RefreshToken);
 
-		return Ok(new { authResultDto.AccessToken, authResultDto.RefreshToken });
+		var tokens = new TokensDto(authResultDto.AccessToken, authResultDto.RefreshToken);
+		return Ok(new ApiResponse<TokensDto>(StatusCodes.Status200OK, tokens, 1));
 	}
 
 	[HttpGet("authorize")]
@@ -55,10 +56,10 @@ public class AuthControllers(
 			throw new UnauthorizedAccessException("Invalid User ID format in claims.");
 
 		var user = await mediator.Send(
-			new GetUserByIdQuery(userId),
-			ct);
+				new GetUserByIdQuery(userId),
+				ct);
 
-		return Ok(user);
+		return Ok(new ApiResponse<UserDto>(StatusCodes.Status200OK, user, 1));
 	}
 
 	[HttpGet("unauthorize")]
@@ -75,7 +76,7 @@ public class AuthControllers(
 
 		await mediator.Send(new UnauthorizeCommand(userId), ct);
 
-		return Ok();
+		return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Unauthorize success", 0));
 	}
 
 	[HttpPost("login")]
@@ -90,12 +91,13 @@ public class AuthControllers(
 			new GenerateTokensCommand(existUser.Id, existUser.Role), ct);
 
 		HttpContext.Response.Cookies.Append(
-			JwtConstants.RefreshCookieName,
-			authResultDto.RefreshToken);
+				JwtConstants.RefreshCookieName,
+				authResultDto.RefreshToken);
 
-		return Ok(new TokensDto(
-			authResultDto.AccessToken,
-			authResultDto.RefreshToken));
+		var tokens = new TokensDto(
+				authResultDto.AccessToken,
+				authResultDto.RefreshToken);
+		return Ok(new ApiResponse<TokensDto>(StatusCodes.Status200OK, tokens, 1));
 	}
 
 	[HttpPost("registration")]
@@ -104,9 +106,11 @@ public class AuthControllers(
 	{
 		var authResultDto = await mediator.Send(request, ct);
 
-		return Ok(new TokensDto(
-			authResultDto.AccessToken,
-			authResultDto.RefreshToken));
+		var tokens = new TokensDto(
+				authResultDto.AccessToken,
+				authResultDto.RefreshToken);
+		return StatusCode(StatusCodes.Status201Created,
+				new ApiResponse<TokensDto>(StatusCodes.Status201Created, tokens, 1));
 	}
 
 	[HttpPost("forgot-password")]
@@ -115,7 +119,7 @@ public class AuthControllers(
 	{
 		await mediator.Send(request, ct);
 
-		return Ok(new { message = "If the email exists, a reset link was sent." });
+		return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "If the email exists, a reset link was sent.", null));
 	}
 
 	[HttpPost("reset-password")]
@@ -133,6 +137,6 @@ public class AuthControllers(
 
 		await mediator.Send(command, ct);
 
-		return Ok();
+		return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Password reset", 0));
 	}
 }

@@ -4,6 +4,7 @@ using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OnlineStore.API.Contracts;
 using OnlineStore.Application.Dtos;
 using OnlineStore.Application.Users;
 
@@ -31,6 +32,8 @@ public class UserController(IMediator mediator, IMapper mapper)
 
 		var user = await mediator.Send(command, ct);
 
-		return Ok(mapper.Map<UserDto>(user));
+		var dto = mapper.Map<UserDto>(user);
+
+		return Ok(new ApiResponse<UserDto>(StatusCodes.Status200OK, dto, 1));
 	}
 }
