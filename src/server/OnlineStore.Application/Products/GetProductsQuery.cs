@@ -43,14 +43,15 @@ public sealed class GetProductsQueryHandler(IApplicationDbContext dbContext)
 
 		if (!string.IsNullOrWhiteSpace(request.SortBy))
 		{
-			query = request.SortBy.ToLower() switch
-			{
-				"price" => request.Descending ? query.OrderByDescending(p => p.Price) : query.OrderBy(p => p.Price),
-				"popularity" => request.Descending ? query.OrderByDescending(p => p.Popularity) : query.OrderBy(p => p.Popularity),
-				"createdat" => request.Descending ? query.OrderByDescending(p => p.CreatedAt) : query.OrderBy(p => p.CreatedAt),
-				_ => query
-			};
-		}
+                        query = request.SortBy.ToLower() switch
+                        {
+                                "price" => request.Descending ? query.OrderByDescending(p => p.Price) : query.OrderBy(p => p.Price),
+                                "popularity" => request.Descending ? query.OrderByDescending(p => p.Popularity) : query.OrderBy(p => p.Popularity),
+                                "createdat" => request.Descending ? query.OrderByDescending(p => p.CreatedAt) : query.OrderBy(p => p.CreatedAt),
+                                "name" => request.Descending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name),
+                                _ => query
+                        };
+                }
 
 		var products = await query.ToListAsync(ct);
 
