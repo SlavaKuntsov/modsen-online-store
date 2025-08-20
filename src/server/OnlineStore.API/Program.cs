@@ -59,10 +59,7 @@ app.UseCookiePolicy(
 app.UseHttpsRedirection();
 
 app.UseForwardedHeaders(
-	new ForwardedHeadersOptions
-	{
-		ForwardedHeaders = ForwardedHeaders.All
-	});
+	new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All });
 app.UseCors();
 
 app.UseAuthentication();
