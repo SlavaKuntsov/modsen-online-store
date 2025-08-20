@@ -1,4 +1,3 @@
-﻿using System.Reflection;
 using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +11,7 @@ public static class MapperExtension
                 var config = TypeAdapterConfig.GlobalSettings;
                 config.Scan(AppDomain.CurrentDomain.GetAssemblies());
                 services.AddSingleton(config);
-                services.AddScoped<IMapper, ServiceMapper>();
+                services.AddSingleton<IMapper>(new Mapper(config));
                 return services;
         }
 }
