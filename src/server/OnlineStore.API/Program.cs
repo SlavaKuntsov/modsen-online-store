@@ -7,6 +7,7 @@ using DotNetEnv;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.HttpOverrides;
 using OnlineStore.API.Contracts.Examples;
+using OnlineStore.API.Services;
 using OnlineStore.Application.Extensions;
 using OnlineStore.Persistance.Extensions;
 using Serilog;
@@ -30,11 +31,14 @@ services
 		.AddMapper();
 
 services
-	.AddApplication()
-	.AddInfrastructure(configuration);
+        .AddApplication()
+        .AddInfrastructure(configuration);
 
 services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 services.AddSwaggerExamplesFromAssemblyOf<RegistrationRequestExample>();
+services.AddMemoryCache();
+services.AddHttpContextAccessor();
+services.AddScoped<ICartService, CartService>();
 
 var app = builder.Build();
 
