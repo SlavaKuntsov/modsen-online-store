@@ -29,7 +29,7 @@ public class CategoryController(IMediator mediator) : ControllerBase
 		return Ok(category);
 	}
 
-	[HttpPut("{id:guid}")]
+	[HttpPut("{id}")]
 	public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoryRequest request, CancellationToken ct = default)
 	{
 		Guid? parentId = string.IsNullOrWhiteSpace(request.ParentCategoryId)

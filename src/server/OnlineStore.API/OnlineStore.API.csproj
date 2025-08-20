@@ -9,9 +9,9 @@
 		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
 	</PropertyGroup>
 
-	<Target Name="FormatCode" BeforeTargets="Build">
-		<Exec Command="dotnet format $(SolutionDir)OnlineStore.sln"/>
-	</Target>
+<!--	<Target Name="FormatCode" BeforeTargets="Build">-->
+<!--		<Exec Command="dotnet format $(SolutionDir)OnlineStore.sln"/>-->
+<!--	</Target>-->
 
 	<ItemGroup>
 		<PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0"/>

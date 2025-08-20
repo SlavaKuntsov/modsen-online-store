@@ -22,9 +22,7 @@ internal sealed class RequestLoggingPipelineBehavior<TRequest, TResponse>(ILogge
 		var result = await next();
 
 		if (result.IsSuccess)
-		{
 			logger.LogInformation("Completed request {RequestName}", requestName);
-		}
 		else
 		{
 			using (LogContext.PushProperty("Error", result.Error, true))

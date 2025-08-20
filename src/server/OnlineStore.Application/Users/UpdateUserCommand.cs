@@ -1,4 +1,4 @@
-﻿using Domain.Exceptions;
+using Domain.Exceptions;
 using Mapster;
 using MapsterMapper;
 using MediatR;
@@ -21,7 +21,7 @@ public class UpdateUserCommandHandler(
 	public async Task<UserDto> Handle(UpdateUserCommand request, CancellationToken ct = default)
 	{
 		var userId = request.Id
-					?? throw new ArgumentNullException(nameof(request), "User ID is required.");
+					?? throw new ArgumentNullException(nameof(request.Id), "User ID is required.");
 
 		var existUser = await dbContext.Users
 			.Where(u => u.Id == userId)
