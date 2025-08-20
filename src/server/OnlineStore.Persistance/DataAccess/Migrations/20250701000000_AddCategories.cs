@@ -2,8 +2,6 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace OnlineStore.Persistance.DataAccess.Migrations;
-
 public partial class AddCategories : Migration
 {
 	protected override void Up(MigrationBuilder migrationBuilder)
