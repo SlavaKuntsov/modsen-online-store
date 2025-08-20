@@ -11,7 +11,7 @@ public static class MapperExtension
                 var config = TypeAdapterConfig.GlobalSettings;
                 config.Scan(AppDomain.CurrentDomain.GetAssemblies());
                 services.AddSingleton(config);
-                services.AddSingleton<IMapper>(new Mapper(config));
+                services.AddSingleton<IMapper>(new MapsterMapper.Mapper(config));
                 return services;
         }
 }
