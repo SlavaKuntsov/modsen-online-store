@@ -10,19 +10,19 @@ namespace OnlineStore.Persistance.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection AddInfrastructure(
-		this IServiceCollection services,
-		IConfiguration configuration)
-	{
-		services.AddPostgres<IApplicationDbContext, ApplicationDbContext>(configuration);
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.AddPostgres<IApplicationDbContext, ApplicationDbContext>(configuration);
 
-		services.AddScoped<ICookieService, CookieService>();
-		services.AddScoped<IPasswordHash, PasswordHash>();
-		services.AddScoped<IJwt, Jwt>();
+        services.AddScoped<ICookieService, CookieService>();
+        services.AddScoped<IPasswordHash, PasswordHash>();
+        services.AddScoped<IJwt, Jwt>();
 
-		services.AddScoped<IResetPassword, ResetPassword>();
-		services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IResetPassword, ResetPassword>();
+        services.AddScoped<IEmailService, EmailService>();
 
-		return services;
-	}
+        return services;
+    }
 }

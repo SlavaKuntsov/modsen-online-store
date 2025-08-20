@@ -2,6 +2,6 @@
 
 public interface ICookieService
 {
-	void DeleteRefreshToken();
-	string GetRefreshToken();
+    void DeleteRefreshToken();
+    string GetRefreshToken();
 }

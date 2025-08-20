@@ -5,11 +5,11 @@ namespace Utilities.Auth;
 
 public interface IJwt
 {
-	public string GenerateAccessToken(Guid id, Role role);
+    public string GenerateAccessToken(Guid id, Role role);
 
-	public string GenerateRefreshToken();
+    public string GenerateRefreshToken();
 
-	public Guid ValidateRefreshTokenAsync(RefreshToken? existRefreshToken);
+    public Guid ValidateRefreshTokenAsync(RefreshToken? existRefreshToken);
 
-	public int GetRefreshTokenExpirationDays();
+    public int GetRefreshTokenExpirationDays();
 }

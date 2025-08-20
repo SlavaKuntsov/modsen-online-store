@@ -19,120 +19,120 @@ namespace OnlineStore.API.Controllers;
 [Route("api/v{version:apiVersion}/auth")]
 [ApiVersion("1.0")]
 public class AuthControllers(
-	IMediator mediator,
-	ICookieService cookieService)
-	: ControllerBase
+    IMediator mediator,
+    ICookieService cookieService)
+    : ControllerBase
 {
-	[HttpGet("refresh-token")]
-	public async Task<IActionResult> RefreshToken(CancellationToken ct = default)
-	{
-		var refreshToken = cookieService.GetRefreshToken();
+    [HttpGet("refresh-token")]
+    public async Task<IActionResult> RefreshToken(CancellationToken ct = default)
+    {
+        var refreshToken = cookieService.GetRefreshToken();
 
-		var userRoleDto = await mediator.Send(
-			new GetByRefreshTokenQuery(
-				refreshToken),
-			ct);
+        var userRoleDto = await mediator.Send(
+            new GetByRefreshTokenQuery(
+                refreshToken),
+            ct);
 
-		var authResultDto = await mediator.Send(
-			new GenerateTokensCommand(userRoleDto.Id, userRoleDto.Role),
-			ct);
+        var authResultDto = await mediator.Send(
+            new GenerateTokensCommand(userRoleDto.Id, userRoleDto.Role),
+            ct);
 
-		HttpContext.Response.Cookies.Append(
-			JwtConstants.RefreshCookieName,
-			authResultDto.RefreshToken);
+        HttpContext.Response.Cookies.Append(
+            JwtConstants.RefreshCookieName,
+            authResultDto.RefreshToken);
 
-		return Ok(new { authResultDto.AccessToken, authResultDto.RefreshToken });
-	}
+        return Ok(new { authResultDto.AccessToken, authResultDto.RefreshToken });
+    }
 
-	[HttpGet("authorize")]
-	[Authorize(Policy = "All")]
-	public async Task<IActionResult> Authorize(CancellationToken ct = default)
-	{
-		var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) 
-						?? throw new UnauthorizedAccessException("User ID not found in claims.");
+    [HttpGet("authorize")]
+    [Authorize(Policy = "All")]
+    public async Task<IActionResult> Authorize(CancellationToken ct = default)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+                        ?? throw new UnauthorizedAccessException("User ID not found in claims.");
 
-		if (!Guid.TryParse(userIdClaim.Value, out var userId))
-			throw new UnauthorizedAccessException("Invalid User ID format in claims.");
+        if (!Guid.TryParse(userIdClaim.Value, out var userId))
+            throw new UnauthorizedAccessException("Invalid User ID format in claims.");
 
-		var user = await mediator.Send(
-			new GetUserByIdQuery(userId),
-			ct);
+        var user = await mediator.Send(
+            new GetUserByIdQuery(userId),
+            ct);
 
-		return Ok(user);
-	}
+        return Ok(user);
+    }
 
-	[HttpGet("unauthorize")]
-	[Authorize(Policy = "All")]
-	public async Task<IActionResult> Unauthorize(CancellationToken ct = default)
-	{
-		var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
-						?? throw new UnauthorizedAccessException("User ID not found in claims.");
+    [HttpGet("unauthorize")]
+    [Authorize(Policy = "All")]
+    public async Task<IActionResult> Unauthorize(CancellationToken ct = default)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+                        ?? throw new UnauthorizedAccessException("User ID not found in claims.");
 
-		if (!Guid.TryParse(userIdClaim.Value, out var userId))
-			throw new UnauthorizedAccessException("Invalid User ID format in claims.");
+        if (!Guid.TryParse(userIdClaim.Value, out var userId))
+            throw new UnauthorizedAccessException("Invalid User ID format in claims.");
 
-		cookieService.DeleteRefreshToken();
+        cookieService.DeleteRefreshToken();
 
-		await mediator.Send(new UnauthorizeCommand(userId), ct);
+        await mediator.Send(new UnauthorizeCommand(userId), ct);
 
-		return Ok();
-	}
-	
-	[HttpPost("login")]
-	[SwaggerRequestExample(typeof(LoginQuery), typeof(LoginRequestExample))]
-	public async Task<IActionResult> Login([FromBody] LoginQuery request, CancellationToken ct = default)
-	{
-		var existUser = await mediator.Send(
-			new LoginQuery(request.Email, request.Password),
-			ct);
+        return Ok();
+    }
 
-		var authResultDto = await mediator.Send(
-			new GenerateTokensCommand(existUser.Id, existUser.Role), ct);
+    [HttpPost("login")]
+    [SwaggerRequestExample(typeof(LoginQuery), typeof(LoginRequestExample))]
+    public async Task<IActionResult> Login([FromBody] LoginQuery request, CancellationToken ct = default)
+    {
+        var existUser = await mediator.Send(
+            new LoginQuery(request.Email, request.Password),
+            ct);
 
-		HttpContext.Response.Cookies.Append(
-			JwtConstants.RefreshCookieName,
-			authResultDto.RefreshToken);
+        var authResultDto = await mediator.Send(
+            new GenerateTokensCommand(existUser.Id, existUser.Role), ct);
 
-		return Ok(new TokensDto(
-			authResultDto.AccessToken,
-			authResultDto.RefreshToken));
-	}
+        HttpContext.Response.Cookies.Append(
+            JwtConstants.RefreshCookieName,
+            authResultDto.RefreshToken);
 
-	[HttpPost("registration")]
-	[SwaggerRequestExample(typeof(UserRegistrationCommand), typeof(RegistrationRequestExample))]
-	public async Task<IActionResult> Registration([FromBody] UserRegistrationCommand request, CancellationToken ct = default)
-	{
-		var authResultDto = await mediator.Send(request, ct);
+        return Ok(new TokensDto(
+            authResultDto.AccessToken,
+            authResultDto.RefreshToken));
+    }
 
-		return Ok(new TokensDto(
-			authResultDto.AccessToken,
-			authResultDto.RefreshToken));
-	}
-	
-	[HttpPost("forgot-password")]
-	[SwaggerRequestExample(typeof(ForgotPasswordCommand), typeof(ForgotPasswordExample))]
-	public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand request, CancellationToken ct = default)
-	{
-		await mediator.Send(request, ct);
-		
-		return Ok(new { message = "If the email exists, a reset link was sent." });
-	}
+    [HttpPost("registration")]
+    [SwaggerRequestExample(typeof(UserRegistrationCommand), typeof(RegistrationRequestExample))]
+    public async Task<IActionResult> Registration([FromBody] UserRegistrationCommand request, CancellationToken ct = default)
+    {
+        var authResultDto = await mediator.Send(request, ct);
 
-	[HttpPost("reset-password")]
-	[SwaggerRequestExample(typeof(ResetPasswordRequest), typeof(ResetPasswordExample))]
-	[Authorize(Policy = "All")]
-	public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand request, CancellationToken ct = default)
-	{
-		var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
-						?? throw new UnauthorizedAccessException("User ID not found in claims.");
+        return Ok(new TokensDto(
+            authResultDto.AccessToken,
+            authResultDto.RefreshToken));
+    }
 
-		if (!Guid.TryParse(userIdClaim.Value, out var userId))
-			throw new UnauthorizedAccessException("Invalid User ID format in claims.");
+    [HttpPost("forgot-password")]
+    [SwaggerRequestExample(typeof(ForgotPasswordCommand), typeof(ForgotPasswordExample))]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand request, CancellationToken ct = default)
+    {
+        await mediator.Send(request, ct);
 
-		var command = request with { UserId = userId };
-		
-		await mediator.Send(command, ct);
-		
-		return Ok();
-	}
+        return Ok(new { message = "If the email exists, a reset link was sent." });
+    }
+
+    [HttpPost("reset-password")]
+    [SwaggerRequestExample(typeof(ResetPasswordRequest), typeof(ResetPasswordExample))]
+    [Authorize(Policy = "All")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand request, CancellationToken ct = default)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+                        ?? throw new UnauthorizedAccessException("User ID not found in claims.");
+
+        if (!Guid.TryParse(userIdClaim.Value, out var userId))
+            throw new UnauthorizedAccessException("Invalid User ID format in claims.");
+
+        var command = request with { UserId = userId };
+
+        await mediator.Send(command, ct);
+
+        return Ok();
+    }
 }

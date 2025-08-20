@@ -13,24 +13,24 @@ namespace OnlineStore.API.Controllers;
 [Route("api/v{version:apiVersion}/users")]
 [ApiVersion("1.0")]
 public class UserController(IMediator mediator, IMapper mapper)
-	: ControllerBase
+    : ControllerBase
 {
-	[HttpGet("update")]
-	[Authorize(Policy = "User")]
-	public async Task<IActionResult> RefreshToken(
-		[FromBody] UpdateUserCommand request,
-		CancellationToken ct = default)
-	{
-		var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
-						?? throw new UnauthorizedAccessException("User ID not found in claims.");
+    [HttpGet("update")]
+    [Authorize(Policy = "User")]
+    public async Task<IActionResult> RefreshToken(
+        [FromBody] UpdateUserCommand request,
+        CancellationToken ct = default)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+                        ?? throw new UnauthorizedAccessException("User ID not found in claims.");
 
-		if (!Guid.TryParse(userIdClaim.Value, out var userId))
-			throw new UnauthorizedAccessException("Invalid User ID format in claims.");
+        if (!Guid.TryParse(userIdClaim.Value, out var userId))
+            throw new UnauthorizedAccessException("Invalid User ID format in claims.");
 
-		var command = request with { Id = userId };
+        var command = request with { Id = userId };
 
-		var user = await mediator.Send(command, ct);
+        var user = await mediator.Send(command, ct);
 
-		return Ok(mapper.Map<UserDto>(user));
-	}
+        return Ok(mapper.Map<UserDto>(user));
+    }
 }
