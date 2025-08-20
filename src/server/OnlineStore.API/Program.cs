@@ -31,8 +31,8 @@ services
 		.AddMapper();
 
 services
-        .AddApplication()
-        .AddInfrastructure(configuration);
+		.AddApplication()
+		.AddInfrastructure(configuration);
 
 services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 services.AddSwaggerExamplesFromAssemblyOf<RegistrationRequestExample>();
