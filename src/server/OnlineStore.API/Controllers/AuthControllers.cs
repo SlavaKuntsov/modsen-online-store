@@ -3,7 +3,6 @@ using Asp.Versioning;
 using Domain.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.API.Contracts;
 using OnlineStore.API.Contracts.Examples;
@@ -38,13 +37,13 @@ public class AuthControllers(
 			new GenerateTokensCommand(userRoleDto.Id, userRoleDto.Role),
 			ct);
 
-                HttpContext.Response.Cookies.Append(
-                        JwtConstants.RefreshCookieName,
-                        authResultDto.RefreshToken);
+		HttpContext.Response.Cookies.Append(
+				JwtConstants.RefreshCookieName,
+				authResultDto.RefreshToken);
 
-                var tokens = new TokensDto(authResultDto.AccessToken, authResultDto.RefreshToken);
-                return Ok(new ApiResponse<TokensDto>(StatusCodes.Status200OK, tokens, 1));
-        }
+		var tokens = new TokensDto(authResultDto.AccessToken, authResultDto.RefreshToken);
+		return Ok(new ApiResponse<TokensDto>(StatusCodes.Status200OK, tokens, 1));
+	}
 
 	[HttpGet("authorize")]
 	[Authorize(Policy = "All")]
@@ -56,12 +55,12 @@ public class AuthControllers(
 		if (!Guid.TryParse(userIdClaim.Value, out var userId))
 			throw new UnauthorizedAccessException("Invalid User ID format in claims.");
 
-                var user = await mediator.Send(
-                        new GetUserByIdQuery(userId),
-                        ct);
+		var user = await mediator.Send(
+				new GetUserByIdQuery(userId),
+				ct);
 
-                return Ok(new ApiResponse<UserDto>(StatusCodes.Status200OK, user, 1));
-        }
+		return Ok(new ApiResponse<UserDto>(StatusCodes.Status200OK, user, 1));
+	}
 
 	[HttpGet("unauthorize")]
 	[Authorize(Policy = "All")]
@@ -75,10 +74,10 @@ public class AuthControllers(
 
 		cookieService.DeleteRefreshToken();
 
-                await mediator.Send(new UnauthorizeCommand(userId), ct);
+		await mediator.Send(new UnauthorizeCommand(userId), ct);
 
-                return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Unauthorize success", 0));
-        }
+		return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Unauthorize success", 0));
+	}
 
 	[HttpPost("login")]
 	[SwaggerRequestExample(typeof(LoginQuery), typeof(LoginRequestExample))]
@@ -91,37 +90,37 @@ public class AuthControllers(
 		var authResultDto = await mediator.Send(
 			new GenerateTokensCommand(existUser.Id, existUser.Role), ct);
 
-                HttpContext.Response.Cookies.Append(
-                        JwtConstants.RefreshCookieName,
-                        authResultDto.RefreshToken);
+		HttpContext.Response.Cookies.Append(
+				JwtConstants.RefreshCookieName,
+				authResultDto.RefreshToken);
 
-                var tokens = new TokensDto(
-                        authResultDto.AccessToken,
-                        authResultDto.RefreshToken);
-                return Ok(new ApiResponse<TokensDto>(StatusCodes.Status200OK, tokens, 1));
-        }
+		var tokens = new TokensDto(
+				authResultDto.AccessToken,
+				authResultDto.RefreshToken);
+		return Ok(new ApiResponse<TokensDto>(StatusCodes.Status200OK, tokens, 1));
+	}
 
 	[HttpPost("registration")]
 	[SwaggerRequestExample(typeof(UserRegistrationCommand), typeof(RegistrationRequestExample))]
 	public async Task<IActionResult> Registration([FromBody] UserRegistrationCommand request, CancellationToken ct = default)
 	{
-                var authResultDto = await mediator.Send(request, ct);
+		var authResultDto = await mediator.Send(request, ct);
 
-                var tokens = new TokensDto(
-                        authResultDto.AccessToken,
-                        authResultDto.RefreshToken);
-                return StatusCode(StatusCodes.Status201Created,
-                        new ApiResponse<TokensDto>(StatusCodes.Status201Created, tokens, 1));
-        }
+		var tokens = new TokensDto(
+				authResultDto.AccessToken,
+				authResultDto.RefreshToken);
+		return StatusCode(StatusCodes.Status201Created,
+				new ApiResponse<TokensDto>(StatusCodes.Status201Created, tokens, 1));
+	}
 
 	[HttpPost("forgot-password")]
 	[SwaggerRequestExample(typeof(ForgotPasswordCommand), typeof(ForgotPasswordExample))]
 	public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand request, CancellationToken ct = default)
 	{
-                await mediator.Send(request, ct);
+		await mediator.Send(request, ct);
 
-                return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "If the email exists, a reset link was sent.", null));
-        }
+		return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "If the email exists, a reset link was sent.", null));
+	}
 
 	[HttpPost("reset-password")]
 	[SwaggerRequestExample(typeof(ResetPasswordRequest), typeof(ResetPasswordExample))]
@@ -136,8 +135,8 @@ public class AuthControllers(
 
 		var command = request with { UserId = userId };
 
-                await mediator.Send(command, ct);
+		await mediator.Send(command, ct);
 
-                return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Password reset", 0));
-        }
+		return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Password reset", 0));
+	}
 }

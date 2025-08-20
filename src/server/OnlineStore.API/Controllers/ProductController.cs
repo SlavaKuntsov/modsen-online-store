@@ -1,6 +1,5 @@
 using Asp.Versioning;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.API.Contracts;
 using OnlineStore.Application.Dtos;
@@ -24,54 +23,54 @@ public class ProductController(IMediator mediator) : ControllerBase
 		[FromQuery] bool descending = false,
 		CancellationToken ct = default)
 	{
-                var products = await mediator.Send(new GetProductsQuery(
-                        categoryId,
-                        minPrice,
-                        maxPrice,
-                        minRating,
-                        inStock,
-                        sortBy,
-                        descending), ct);
-                return Ok(new ApiResponse<List<ProductDto>>(StatusCodes.Status200OK, products, products.Count));
-        }
+		var products = await mediator.Send(new GetProductsQuery(
+				categoryId,
+				minPrice,
+				maxPrice,
+				minRating,
+				inStock,
+				sortBy,
+				descending), ct);
+		return Ok(new ApiResponse<List<ProductDto>>(StatusCodes.Status200OK, products, products.Count));
+	}
 
 	[HttpGet("{id}")]
 	public async Task<IActionResult> GetById(Guid id, CancellationToken ct = default)
 	{
-                var product = await mediator.Send(new GetProductByIdQuery(id), ct);
-                return Ok(new ApiResponse<ProductDto>(StatusCodes.Status200OK, product, 1));
-        }
+		var product = await mediator.Send(new GetProductByIdQuery(id), ct);
+		return Ok(new ApiResponse<ProductDto>(StatusCodes.Status200OK, product, 1));
+	}
 
 	[HttpPost]
 	public async Task<IActionResult> Create([FromBody] CreateProductRequest request, CancellationToken ct = default)
 	{
-                var product = await mediator.Send(new CreateProductCommand(
-                        request.Name,
-                        request.Description,
-                        request.Price,
-                        request.StockQuantity,
-                        request.CategoryId), ct);
-                return StatusCode(StatusCodes.Status201Created,
-                        new ApiResponse<ProductDto>(StatusCodes.Status201Created, product, 1));
-        }
+		var product = await mediator.Send(new CreateProductCommand(
+				request.Name,
+				request.Description,
+				request.Price,
+				request.StockQuantity,
+				request.CategoryId), ct);
+		return StatusCode(StatusCodes.Status201Created,
+				new ApiResponse<ProductDto>(StatusCodes.Status201Created, product, 1));
+	}
 
 	[HttpPut("{id}")]
 	public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductRequest request, CancellationToken ct = default)
 	{
-                var product = await mediator.Send(new UpdateProductCommand(
-                        id,
-                        request.Name,
-                        request.Description,
-                        request.Price,
-                        request.StockQuantity,
-                        request.CategoryId), ct);
-                return Ok(new ApiResponse<ProductDto>(StatusCodes.Status200OK, product, 1));
-        }
+		var product = await mediator.Send(new UpdateProductCommand(
+				id,
+				request.Name,
+				request.Description,
+				request.Price,
+				request.StockQuantity,
+				request.CategoryId), ct);
+		return Ok(new ApiResponse<ProductDto>(StatusCodes.Status200OK, product, 1));
+	}
 
 	[HttpDelete("{id}")]
 	public async Task<IActionResult> Delete(Guid id, CancellationToken ct = default)
 	{
-                await mediator.Send(new DeleteProductCommand(id), ct);
-                return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Deleted", 0));
-        }
+		await mediator.Send(new DeleteProductCommand(id), ct);
+		return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Deleted", 0));
+	}
 }
