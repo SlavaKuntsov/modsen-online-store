@@ -1,4 +1,4 @@
-﻿using OnlineStore.Application.Auth;
+using OnlineStore.Application.Auth;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace OnlineStore.API.Contracts.Examples;

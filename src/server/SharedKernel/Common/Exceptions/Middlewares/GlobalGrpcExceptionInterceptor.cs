@@ -1,4 +1,4 @@
-﻿using Grpc.Core;
+using Grpc.Core;
 using Grpc.Core.Interceptors;
 
 namespace Common.Exceptions.Middlewares;

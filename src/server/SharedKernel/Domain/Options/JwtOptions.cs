@@ -1,4 +1,4 @@
-﻿namespace Domain.Options;
+namespace Domain.Options;
 
 public class JwtOptions
 {

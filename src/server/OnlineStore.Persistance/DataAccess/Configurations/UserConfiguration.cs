@@ -1,10 +1,9 @@
-﻿using Domain.Enums;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineStore.Domain.Entities;
 
 namespace OnlineStore.Persistance.DataAccess.Configurations;
-
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {

@@ -1,5 +1,4 @@
-﻿using Common.Exceptions.Middlewares;
-using Microsoft.AspNetCore.Builder;
+using Common.Exceptions.Middlewares;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Common.Exceptions;

@@ -1,4 +1,4 @@
-﻿namespace Utilities.Auth;
+namespace Utilities.Auth;
 
 public class PasswordHash : IPasswordHash
 {
