@@ -5,8 +5,8 @@ namespace OnlineStore.API.Contracts.Examples;
 
 public class ForgotPasswordExample : IExamplesProvider<ForgotPasswordCommand>
 {
-	public ForgotPasswordCommand GetExamples()
-	{
-		return new ForgotPasswordCommand("example@gmail.com");
-	}
+    public ForgotPasswordCommand GetExamples()
+    {
+        return new ForgotPasswordCommand("example@gmail.com");
+    }
 }

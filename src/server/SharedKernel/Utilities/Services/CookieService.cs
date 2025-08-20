@@ -1,28 +1,28 @@
-using Domain.Constants;
+﻿using Domain.Constants;
 using Microsoft.AspNetCore.Http;
 
 namespace Utilities.Services;
 
 public class CookieService(IHttpContextAccessor httpContextAccessor) : ICookieService
 {
-	public string GetRefreshToken()
-	{
-		var httpContext = httpContextAccessor.HttpContext;
+    public string GetRefreshToken()
+    {
+        var httpContext = httpContextAccessor.HttpContext;
 
-		if (httpContext == null)
-			throw new InvalidOperationException("No active HTTP context available.");
+        if (httpContext == null)
+            throw new InvalidOperationException("No active HTTP context available.");
 
-		if (httpContext.Request.Cookies.TryGetValue(JwtConstants.RefreshCookieName, out var refreshToken))
-			return refreshToken;
+        if (httpContext.Request.Cookies.TryGetValue(JwtConstants.RefreshCookieName, out var refreshToken))
+            return refreshToken;
 
-		throw new InvalidOperationException("Refresh token not found in cookies.");
-	}
+        throw new InvalidOperationException("Refresh token not found in cookies.");
+    }
 
-	public void DeleteRefreshToken()
-	{
-		var httpContext = httpContextAccessor.HttpContext
-			?? throw new InvalidOperationException("No active HTTP context available.");
+    public void DeleteRefreshToken()
+    {
+        var httpContext = httpContextAccessor.HttpContext
+            ?? throw new InvalidOperationException("No active HTTP context available.");
 
-		httpContext.Response.Cookies.Delete(JwtConstants.RefreshCookieName);
-	}
+        httpContext.Response.Cookies.Delete(JwtConstants.RefreshCookieName);
+    }
 }

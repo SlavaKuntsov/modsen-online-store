@@ -5,10 +5,10 @@ namespace Common.Enums;
 
 public static class EnumExtensions
 {
-	public static string GetDescription(this Enum value)
-	{
-		FieldInfo field = value.GetType().GetField(value.ToString());
-		DescriptionAttribute attribute = (DescriptionAttribute)field.GetCustomAttribute(typeof(DescriptionAttribute));
-		return attribute == null ? value.ToString() : attribute.Description;
-	}
+    public static string GetDescription(this Enum value)
+    {
+        var field = value.GetType().GetField(value.ToString());
+        var attribute = (DescriptionAttribute)(field ?? throw new InvalidOperationException()).GetCustomAttribute(typeof(DescriptionAttribute))!;
+        return attribute.Description;
+    }
 }

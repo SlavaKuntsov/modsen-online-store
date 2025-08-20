@@ -5,18 +5,18 @@ using OnlineStore.Domain.Entities;
 
 namespace OnlineStore.Application.Categories;
 
-public sealed record CreateCategoryCommand(string Name, Guid? ParentCategoryId) : IRequest<CategoryDto>;
+public sealed record CreateCategoryCommand(string Name, Guid? ParentCategoryId = null) : IRequest<CategoryDto>;
 
 public sealed class CreateCategoryCommandHandler(IApplicationDbContext dbContext)
-		: IRequestHandler<CreateCategoryCommand, CategoryDto>
+        : IRequestHandler<CreateCategoryCommand, CategoryDto>
 {
-	public async Task<CategoryDto> Handle(CreateCategoryCommand request, CancellationToken ct)
-	{
-		var category = new Category(request.Name, request.ParentCategoryId);
+    public async Task<CategoryDto> Handle(CreateCategoryCommand request, CancellationToken ct)
+    {
+        var category = new Category(request.Name, request.ParentCategoryId);
 
-		await dbContext.Categories.AddAsync(category, ct);
-		await dbContext.SaveChangesAsync(ct);
+        await dbContext.Categories.AddAsync(category, ct);
+        await dbContext.SaveChangesAsync(ct);
 
-		return new CategoryDto(category.Id, category.Name, category.ParentCategoryId, new List<CategoryDto>());
-	}
+        return new CategoryDto(category.Id, category.Name, category.ParentCategoryId, new List<CategoryDto>());
+    }
 }
