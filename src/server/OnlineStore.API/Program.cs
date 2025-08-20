@@ -19,19 +19,19 @@ var services = builder.Services;
 var configuration = builder.Configuration;
 
 builder.Host.UseSerilog(
-    (context, config) =>
-        config.ReadFrom.Configuration(context.Configuration).Enrich.FromLogContext());
+	(context, config) =>
+		config.ReadFrom.Configuration(context.Configuration).Enrich.FromLogContext());
 
 services
-        .AddCommon()
-        .AddExceptions()
-        .AddAuthorization(configuration)
-        .AddSwagger()
-        .AddMapper();
+		.AddCommon()
+		.AddExceptions()
+		.AddAuthorization(configuration)
+		.AddSwagger()
+		.AddMapper();
 
 services
-    .AddApplication()
-    .AddInfrastructure(configuration);
+	.AddApplication()
+	.AddInfrastructure(configuration);
 
 services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 services.AddSwaggerExamplesFromAssemblyOf<RegistrationRequestExample>();
@@ -45,26 +45,26 @@ app.UseExceptionHandler();
 app.UseSwagger();
 
 app.UseSwaggerUI(
-    c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web API v1");
-    });
+	c =>
+	{
+		c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web API v1");
+	});
 
 app.UseCookiePolicy(
-    new CookiePolicyOptions
-    {
-        MinimumSameSitePolicy = SameSiteMode.None,
-        HttpOnly = HttpOnlyPolicy.Always,
-        Secure = CookieSecurePolicy.Always
-    });
+	new CookiePolicyOptions
+	{
+		MinimumSameSitePolicy = SameSiteMode.None,
+		HttpOnly = HttpOnlyPolicy.Always,
+		Secure = CookieSecurePolicy.Always
+	});
 
 app.UseHttpsRedirection();
 
 app.UseForwardedHeaders(
-    new ForwardedHeadersOptions
-    {
-        ForwardedHeaders = ForwardedHeaders.All
-    });
+	new ForwardedHeadersOptions
+	{
+		ForwardedHeaders = ForwardedHeaders.All
+	});
 app.UseCors();
 
 app.UseAuthentication();

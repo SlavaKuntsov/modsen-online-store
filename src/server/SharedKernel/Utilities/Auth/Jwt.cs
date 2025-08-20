@@ -1,4 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -13,47 +13,49 @@ namespace Utilities.Auth;
 
 public class Jwt(IOptions<JwtOptions> jwtOptions) : IJwt
 {
-    private readonly JwtOptions _jwtOptions = jwtOptions.Value;
+	private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
-    public string GenerateAccessToken(Guid id, Role role)
-    {
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier, id.ToString()),
-            new Claim(ClaimTypes.Role, role.GetDescription())
-        };
+	public string GenerateAccessToken(Guid id, Role role)
+	{
+		var claims = new[]
+		{
+			new Claim(ClaimTypes.NameIdentifier, id.ToString()),
+			new Claim(ClaimTypes.Role, role.GetDescription())
+		};
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
+		var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var token = new JwtSecurityToken(
-            claims: claims,
-            expires: System.DateTime.UtcNow.AddMinutes(_jwtOptions.AccessTokenExpirationMinutes),
-            signingCredentials: creds);
+		var token = new JwtSecurityToken(
+			claims: claims,
+			expires: System.DateTime.UtcNow.AddMinutes(_jwtOptions.AccessTokenExpirationMinutes),
+			signingCredentials: creds);
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
-    }
+		return new JwtSecurityTokenHandler().WriteToken(token);
+	}
 
-    public string GenerateRefreshToken()
-    {
-        var randomBytes = new byte[64];
-        using var rng = RandomNumberGenerator.Create();
-        rng.GetBytes(randomBytes);
+	public string GenerateRefreshToken()
+	{
+		var randomBytes = new byte[64];
+		using var rng = RandomNumberGenerator.Create();
+		rng.GetBytes(randomBytes);
 
-        return Convert.ToBase64String(randomBytes);
-    }
+		return Convert.ToBase64String(randomBytes);
+	}
 
-    public int GetRefreshTokenExpirationDays()
-    {
-        return _jwtOptions.RefreshTokenExpirationDays;
-    }
+	public int GetRefreshTokenExpirationDays()
+	{
+		return _jwtOptions.RefreshTokenExpirationDays;
+	}
 
-    public Guid ValidateRefreshTokenAsync(RefreshToken? existRefreshToken)
-    {
-        if (existRefreshToken?.UserId == null || existRefreshToken.IsRevoked ||
-            existRefreshToken.ExpiresAt < System.DateTime.UtcNow)
-            return Guid.Empty;
+	public Guid ValidateRefreshTokenAsync(RefreshToken? existRefreshToken)
+	{
+		if (existRefreshToken?.UserId == null || existRefreshToken.IsRevoked ||
+			existRefreshToken.ExpiresAt < System.DateTime.UtcNow)
+		{
+			return Guid.Empty;
+		}
 
-        return existRefreshToken.UserId.Value;
-    }
+		return existRefreshToken.UserId.Value;
+	}
 }
