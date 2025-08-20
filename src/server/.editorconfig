@@ -53,7 +53,8 @@ csharp_new_line_before_members_in_anonymous_types = true
 csharp_style_namespace_declarations = file_scoped
 
 # Brace settings
-csharp_prefer_braces = true # Prefer curly braces even for one line of code
+csharp_prefer_braces = when_multiline:suggestion
+dotnet_diagnostic.SA1503.severity = none
 
 # name all constant fields using PascalCase
 dotnet_naming_rule.constant_fields_should_be_pascal_case.severity = suggestion
@@ -231,7 +232,8 @@ dotnet_diagnostic.CA1857.severity = warning
 dotnet_diagnostic.CA1858.severity = warning
 
 # CA2007: Consider calling ConfigureAwait on the awaited task
-dotnet_diagnostic.CA2007.severity = warning
+dotnet_diagnostic.CA2007.severity = none
+dotnet_diagnostic.VSTHRD103.severity = none
 
 # CA2008: Do not create tasks without passing a TaskScheduler
 dotnet_diagnostic.CA2008.severity = warning
@@ -324,10 +326,6 @@ dotnet_diagnostic.IDE0060.severity = warning
 
 # IDE0062: Make local function static
 dotnet_diagnostic.IDE0062.severity = warning
-
-# IDE0073: File header
-dotnet_diagnostic.IDE0073.severity = warning
-file_header_template = Licensed to the .NET Foundation under one or more agreements.\nThe .NET Foundation licenses this file to you under the MIT license.
 
 # IDE0161: Convert to file-scoped namespace
 dotnet_diagnostic.IDE0161.severity = warning
@@ -443,6 +441,9 @@ dotnet_diagnostic.IDE0200.severity = suggestion
 
 # CA2016: Forward the 'CancellationToken' parameter to methods that take one
 dotnet_diagnostic.CA2016.severity = suggestion
+
+# Не требовать заголовок файла
+dotnet_diagnostic.SA1633.severity = none
 
 # Defaults for content in the shared src/ and shared runtime dir
 
