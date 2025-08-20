@@ -1,3 +1,4 @@
+using MapsterMapper;
 using MediatR;
 using OnlineStore.Application.Abstractions.Data;
 using OnlineStore.Application.Dtos;
@@ -7,7 +8,7 @@ namespace OnlineStore.Application.Categories;
 
 public sealed record CreateCategoryCommand(string Name, Guid? ParentCategoryId = null) : IRequest<CategoryDto>;
 
-public sealed class CreateCategoryCommandHandler(IApplicationDbContext dbContext)
+public sealed class CreateCategoryCommandHandler(IApplicationDbContext dbContext, IMapper mapper)
         : IRequestHandler<CreateCategoryCommand, CategoryDto>
 {
         public async Task<CategoryDto> Handle(CreateCategoryCommand request, CancellationToken ct)
@@ -17,6 +18,6 @@ public sealed class CreateCategoryCommandHandler(IApplicationDbContext dbContext
                 await dbContext.Categories.AddAsync(category, ct);
                 await dbContext.SaveChangesAsync(ct);
 
-                return new CategoryDto(category.Id, category.Name, category.ParentCategoryId, new List<CategoryDto>());
+                return mapper.Map<CategoryDto>(category);
         }
 }

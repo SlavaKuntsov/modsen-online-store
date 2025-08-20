@@ -1,4 +1,5 @@
 using Domain.Exceptions;
+using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OnlineStore.Application.Abstractions.Data;
@@ -8,7 +9,7 @@ namespace OnlineStore.Application.Categories;
 
 public sealed record UpdateCategoryCommand(Guid Id, string Name, Guid? ParentCategoryId = null) : IRequest<CategoryDto>;
 
-public sealed class UpdateCategoryCommandHandler(IApplicationDbContext dbContext)
+public sealed class UpdateCategoryCommandHandler(IApplicationDbContext dbContext, IMapper mapper)
         : IRequestHandler<UpdateCategoryCommand, CategoryDto>
 {
         public async Task<CategoryDto> Handle(UpdateCategoryCommand request, CancellationToken ct)
@@ -25,6 +26,6 @@ public sealed class UpdateCategoryCommandHandler(IApplicationDbContext dbContext
 
                 await dbContext.SaveChangesAsync(ct);
 
-                return new CategoryDto(category.Id, category.Name, category.ParentCategoryId, new List<CategoryDto>());
+                return mapper.Map<CategoryDto>(category);
         }
 }
