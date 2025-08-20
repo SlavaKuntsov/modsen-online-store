@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.API.Contracts;
 using OnlineStore.Application.Dtos;
@@ -41,8 +42,9 @@ public class ProductController(IMediator mediator) : ControllerBase
 		return Ok(new ApiResponse<ProductDto>(StatusCodes.Status200OK, product, 1));
 	}
 
-	[HttpPost]
-	public async Task<IActionResult> Create([FromBody] CreateProductRequest request, CancellationToken ct = default)
+        [HttpPost]
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> Create([FromBody] CreateProductRequest request, CancellationToken ct = default)
 	{
 		var product = await mediator.Send(new CreateProductCommand(
 				request.Name,
@@ -54,8 +56,9 @@ public class ProductController(IMediator mediator) : ControllerBase
 				new ApiResponse<ProductDto>(StatusCodes.Status201Created, product, 1));
 	}
 
-	[HttpPut("{id}")]
-	public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductRequest request, CancellationToken ct = default)
+        [HttpPut("{id}")]
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductRequest request, CancellationToken ct = default)
 	{
 		var product = await mediator.Send(new UpdateProductCommand(
 				id,
@@ -67,8 +70,9 @@ public class ProductController(IMediator mediator) : ControllerBase
 		return Ok(new ApiResponse<ProductDto>(StatusCodes.Status200OK, product, 1));
 	}
 
-	[HttpDelete("{id}")]
-	public async Task<IActionResult> Delete(Guid id, CancellationToken ct = default)
+        [HttpDelete("{id}")]
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken ct = default)
 	{
 		await mediator.Send(new DeleteProductCommand(id), ct);
 		return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Deleted", 0));
