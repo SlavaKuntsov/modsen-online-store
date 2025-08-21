@@ -20,9 +20,9 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
 			itemBuilder.Property(i => i.UnitPrice).HasColumnType("decimal(18,2)");
 			itemBuilder.Property(i => i.Quantity).IsRequired();
 
-			itemBuilder.ToTable("cart_items");
+			itemBuilder.ToTable("CartItems");
 		});
 
-		builder.ToTable("carts");
+		builder.ToTable("Carts");
 	}
 }

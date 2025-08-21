@@ -10,7 +10,7 @@ public class DateTimeConverter(string format) : JsonConverter<System.DateTime>
 		Type typeToConvert,
 		JsonSerializerOptions options)
 	{
-		return System.DateTime.ParseExact(reader.GetString(), format, null);
+		return System.DateTime.ParseExact(reader.GetString() ?? string.Empty, format, null);
 	}
 
 	public override void Write(

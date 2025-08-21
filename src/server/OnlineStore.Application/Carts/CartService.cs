@@ -1,10 +1,11 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using OnlineStore.Application.Abstractions.Data;
 using OnlineStore.Domain.Entities;
 
-namespace OnlineStore.API.Services;
+namespace OnlineStore.Application.Carts;
 
 public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApplicationDbContext dbContext) : ICartService
 {
@@ -37,7 +38,7 @@ public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApp
 			guestCart = new Cart();
 			cache.Set(key, guestCart, TimeSpan.FromHours(1));
 		}
-		return guestCart;
+		return guestCart!;
 	}
 
 	public async Task<Cart> AddItemAsync(Guid productId, int quantity)
