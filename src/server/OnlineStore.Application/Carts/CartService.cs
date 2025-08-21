@@ -37,7 +37,7 @@ public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApp
                         guestCart = new Cart();
                         cache.Set(key, guestCart, TimeSpan.FromHours(1));
                 }
-                return guestCart;
+                return guestCart!;
         }
 
 	public async Task<Cart> AddItemAsync(Guid productId, int quantity)
