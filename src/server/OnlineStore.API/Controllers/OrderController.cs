@@ -12,11 +12,11 @@ namespace OnlineStore.API.Controllers;
 [ApiVersion("1.0")]
 public class OrderController(IMediator mediator) : ControllerBase
 {
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] PlaceOrderRequest request, CancellationToken ct = default)
-        {
-                var order = await mediator.Send(new PlaceOrderCommand(request.ShippingAddress, request.DeliveryMethod), ct);
-                return StatusCode(StatusCodes.Status201Created,
-                        new ApiResponse<OrderDto>(StatusCodes.Status201Created, order, 1));
-        }
+	[HttpPost]
+	public async Task<IActionResult> Create([FromBody] PlaceOrderRequest request, CancellationToken ct = default)
+	{
+		var order = await mediator.Send(new PlaceOrderCommand(request.ShippingAddress, request.DeliveryMethod), ct);
+		return StatusCode(StatusCodes.Status201Created,
+				new ApiResponse<OrderDto>(StatusCodes.Status201Created, order, 1));
+	}
 }
