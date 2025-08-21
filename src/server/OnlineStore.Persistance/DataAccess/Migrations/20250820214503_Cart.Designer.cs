@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OnlineStore.Persistance.DataAccess;
@@ -11,9 +12,11 @@ using OnlineStore.Persistance.DataAccess;
 namespace OnlineStore.Persistance.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250820214503_Cart")]
+    partial class Cart
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,7 @@ namespace OnlineStore.Persistance.DataAccess.Migrations
                     b.HasKey("Id")
                         .HasName("pk_carts");
 
-                    b.ToTable("carts", (string)null);
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("OnlineStore.Domain.Entities.Category", b =>
@@ -287,7 +290,7 @@ namespace OnlineStore.Persistance.DataAccess.Migrations
                             b1.HasKey("CartId", "ProductId")
                                 .HasName("pk_cart_items");
 
-                            b1.ToTable("cart_items", (string)null);
+                            b1.ToTable("CartItems", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("CartId")
