@@ -7,7 +7,7 @@ using DotNetEnv;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.HttpOverrides;
 using OnlineStore.API.Contracts.Examples;
-using OnlineStore.API.Services;
+using OnlineStore.Application.Carts;
 using OnlineStore.Application.Extensions;
 using OnlineStore.Persistance.Extensions;
 using Serilog;
