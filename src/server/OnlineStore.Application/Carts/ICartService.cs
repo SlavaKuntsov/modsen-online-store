@@ -1,6 +1,6 @@
 using OnlineStore.Domain.Entities;
 
-namespace OnlineStore.API.Services;
+namespace OnlineStore.Application.Carts;
 
 public interface ICartService
 {
