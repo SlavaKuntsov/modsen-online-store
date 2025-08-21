@@ -9,9 +9,9 @@ public class RegistrationRequestExample : IExamplesProvider<UserRegistrationComm
 	{
 		return new UserRegistrationCommand(
 			"example@gmail.com",
-			"qweQWE123",
+			"qweQWE123!",
 			"John",
 			"Doe",
-			"20-12-2020");
+			"20-12-2005");
 	}
 }

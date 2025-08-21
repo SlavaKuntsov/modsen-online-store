@@ -8,6 +8,6 @@ public class ResetPasswordExample : IExamplesProvider<ResetPasswordRequest>
 	{
 		return new ResetPasswordRequest(
 			"qweqweqwe",
-			"qweQWE1233");
+			"qweQWE1233!");
 	}
 }
