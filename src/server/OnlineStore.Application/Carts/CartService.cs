@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using OnlineStore.Application.Abstractions.Data;
@@ -10,35 +11,35 @@ public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApp
 {
 	private const string CartCookie = "CartId";
 
-        public async Task<Cart> GetCartAsync()
-        {
-                var context = accessor.HttpContext!;
-                if (context.User.Identity?.IsAuthenticated == true)
-                {
-                        var id = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                        if (Guid.TryParse(id, out var userId))
-                        {
-                                var cart = await dbContext.Carts
-                                        .Include(c => c.Items)
-                                        .SingleOrDefaultAsync(c => c.UserId == userId);
-                                if (cart is null)
-                                {
-                                        cart = new Cart { UserId = userId };
-                                        await dbContext.Carts.AddAsync(cart);
-                                        await dbContext.SaveChangesAsync();
-                                }
-                                return cart;
-                        }
-                }
+	public async Task<Cart> GetCartAsync()
+	{
+		var context = accessor.HttpContext!;
+		if (context.User.Identity?.IsAuthenticated == true)
+		{
+			var id = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (Guid.TryParse(id, out var userId))
+			{
+				var cart = await dbContext.Carts
+						.Include(c => c.Items)
+						.SingleOrDefaultAsync(c => c.UserId == userId);
+				if (cart is null)
+				{
+					cart = new Cart { UserId = userId };
+					await dbContext.Carts.AddAsync(cart);
+					await dbContext.SaveChangesAsync();
+				}
+				return cart;
+			}
+		}
 
-                var key = GetGuestKey();
-                if (!cache.TryGetValue(key, out Cart? guestCart))
-                {
-                        guestCart = new Cart();
-                        cache.Set(key, guestCart, TimeSpan.FromHours(1));
-                }
-                return guestCart!;
-        }
+		var key = GetGuestKey();
+		if (!cache.TryGetValue(key, out Cart? guestCart))
+		{
+			guestCart = new Cart();
+			cache.Set(key, guestCart, TimeSpan.FromHours(1));
+		}
+		return guestCart!;
+	}
 
 	public async Task<Cart> AddItemAsync(Guid productId, int quantity)
 	{
@@ -75,9 +76,9 @@ public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApp
 		{
 			item.Quantity = newQuantity;
 		}
-                await SaveAsync(cart);
-                return cart;
-        }
+		await SaveAsync(cart);
+		return cart;
+	}
 
 	public async Task<Cart> RemoveItemAsync(Guid productId, int quantity)
 	{
@@ -93,10 +94,10 @@ public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApp
 			{
 				item.Quantity -= quantity;
 			}
-                        await SaveAsync(cart);
-                }
-                return cart;
-        }
+			await SaveAsync(cart);
+		}
+		return cart;
+	}
 
 	public async Task<Cart> UpdateItemQuantityAsync(Guid productId, int quantity)
 	{
@@ -123,9 +124,9 @@ public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApp
 			}
 			item.Quantity = quantity;
 		}
-                await SaveAsync(cart);
-                return cart;
-        }
+		await SaveAsync(cart);
+		return cart;
+	}
 
 	public async Task<Cart> ReplaceItemsAsync(IEnumerable<(Guid productId, int quantity)> items)
 	{
@@ -171,36 +172,36 @@ public class CartService(IMemoryCache cache, IHttpContextAccessor accessor, IApp
 			}
 		}
 
-                await SaveAsync(cart);
-                return cart;
-        }
+		await SaveAsync(cart);
+		return cart;
+	}
 
-        private string GetGuestKey()
-        {
-                var context = accessor.HttpContext!;
-                if (!context.Request.Cookies.TryGetValue(CartCookie, out var cartId))
-                {
-                        cartId = Guid.NewGuid().ToString();
-                        context.Response.Cookies.Append(CartCookie, cartId, new CookieOptions
-                        {
-                                HttpOnly = true,
-                                IsEssential = true,
-                                Expires = DateTimeOffset.UtcNow.AddHours(1)
-                        });
-                }
-                return $"cart:guest:{cartId}";
-        }
+	private string GetGuestKey()
+	{
+		var context = accessor.HttpContext!;
+		if (!context.Request.Cookies.TryGetValue(CartCookie, out var cartId))
+		{
+			cartId = Guid.NewGuid().ToString();
+			context.Response.Cookies.Append(CartCookie, cartId, new CookieOptions
+			{
+				HttpOnly = true,
+				IsEssential = true,
+				Expires = DateTimeOffset.UtcNow.AddHours(1)
+			});
+		}
+		return $"cart:guest:{cartId}";
+	}
 
-        private async Task SaveAsync(Cart cart)
-        {
-                if (cart.UserId.HasValue)
-                {
-                        await dbContext.SaveChangesAsync();
-                }
-                else
-                {
-                        var key = GetGuestKey();
-                        cache.Set(key, cart, TimeSpan.FromHours(1));
-                }
-        }
+	private async Task SaveAsync(Cart cart)
+	{
+		if (cart.UserId.HasValue)
+		{
+			await dbContext.SaveChangesAsync();
+		}
+		else
+		{
+			var key = GetGuestKey();
+			cache.Set(key, cart, TimeSpan.FromHours(1));
+		}
+	}
 }
