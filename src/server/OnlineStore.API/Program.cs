@@ -2,7 +2,7 @@ using Common.Authorization;
 using Common.Common;
 using Common.Exceptions;
 using Common.Mapper;
-using Common.Swagger;
+using Common.OpenApi;
 using DotNetEnv;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -23,12 +23,18 @@ builder.Host.UseSerilog(
 	(context, config) =>
 		config.ReadFrom.Configuration(context.Configuration).Enrich.FromLogContext());
 
+const bool useSwagger = true;
+
 services
 		.AddCommon()
 		.AddExceptions()
-		.AddAuthorization(configuration)
-		.AddSwagger()
-		.AddMapper();
+                .AddAuthorization(configuration)
+                .AddMapper();
+
+if (useSwagger)
+	services.AddSwagger();
+else
+	services.AddScalar();
 
 services
 		.AddApplication()
@@ -46,13 +52,18 @@ app.ApplyMigrations();
 
 app.UseExceptionHandler();
 
-app.UseSwagger();
+if (useSwagger)
+{
+	app.UseSwagger();
+	app.UseSwaggerUI(
+		c =>
+		{
+			c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web API v1");
+		});
+}
+else
+	app.UseScalar();
 
-app.UseSwaggerUI(
-	c =>
-	{
-		c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web API v1");
-	});
 
 app.UseCookiePolicy(
 	new CookiePolicyOptions

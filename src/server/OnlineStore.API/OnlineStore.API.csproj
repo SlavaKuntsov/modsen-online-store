@@ -21,11 +21,12 @@
                         <PrivateAssets>all</PrivateAssets>
                         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
                 </PackageReference>
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0"/>
-		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0"/>
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.4"/>
-		<PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="9.0.0"/>
-	</ItemGroup>
+                  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0"/>
+                  <PackageReference Include="Serilog.AspNetCore" Version="9.0.0"/>
+                  <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.4"/>
+                  <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="9.0.0"/>
+                  <PackageReference Include="Scalar.AspNetCore" Version="2.7.0"/>
+          </ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\OnlineStore.Application\OnlineStore.Application.csproj"/>

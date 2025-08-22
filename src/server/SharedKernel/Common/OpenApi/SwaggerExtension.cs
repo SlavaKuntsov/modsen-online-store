@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Common.Swagger;
+namespace Common.OpenApi;
 
 public static class SwaggerExtension
 {
