@@ -33,7 +33,7 @@ public sealed class PlaceOrderCommandHandler(
 		User? user = null;
 		if (cart.UserId.HasValue)
 		{
-			user = await dbContext.Users.FindAsync(new object[] { cart.UserId.Value }, ct);
+			user = await dbContext.Users.FindAsync([cart.UserId.Value], ct);
 			if (user is null)
 				throw new InvalidOperationException("User not found");
 		}
@@ -41,7 +41,7 @@ public sealed class PlaceOrderCommandHandler(
 		var items = new List<OrderItem>();
 		foreach (var cartItem in cart.Items)
 		{
-			var product = await dbContext.Products.FindAsync(new object[] { cartItem.ProductId }, ct);
+			var product = await dbContext.Products.FindAsync([cartItem.ProductId], ct);
 			if (product is null)
 				throw new InvalidOperationException($"Product {cartItem.ProductId} not found");
 			if (product.StockQuantity < cartItem.Quantity)

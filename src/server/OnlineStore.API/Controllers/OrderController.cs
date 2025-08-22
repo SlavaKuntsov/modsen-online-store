@@ -3,9 +3,9 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.API.Contracts;
 using OnlineStore.API.Contracts.Order;
-using OnlineStore.Domain.Enums;
 using OnlineStore.Application.Dtos;
 using OnlineStore.Application.Orders;
+using OnlineStore.Domain.Enums;
 
 namespace OnlineStore.API.Controllers;
 
@@ -27,14 +27,14 @@ public class OrderController(IMediator mediator) : ControllerBase
 	{
 		var order = await mediator.Send(new PayOrderCommand(request.OrderId), ct);
 		return Ok(new ApiResponse<OrderDto>(StatusCodes.Status200OK, order, 1));
-        }
+	}
 
-        [HttpGet("delivery-methods")]
-        public IActionResult GetDeliveryMethods()
-        {
-                var methods = Enum.GetValues<DeliveryMethod>()
-                        .Select(m => new DeliveryMethodDto((int)m, m.ToString()))
-                        .ToList();
-                return Ok(new ApiResponse<List<DeliveryMethodDto>>(StatusCodes.Status200OK, methods, methods.Count));
-        }
+	[HttpGet("delivery-methods")]
+	public IActionResult GetDeliveryMethods()
+	{
+		var methods = Enum.GetValues<DeliveryMethod>()
+				.Select(m => new DeliveryMethodDto((int)m, m.ToString()))
+				.ToList();
+		return Ok(new ApiResponse<List<DeliveryMethodDto>>(StatusCodes.Status200OK, methods, methods.Count));
+	}
 }
