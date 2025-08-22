@@ -2,7 +2,7 @@ using Common.Authorization;
 using Common.Common;
 using Common.Exceptions;
 using Common.Mapper;
-using Common.Swagger;
+using Common.OpenApi;
 using DotNetEnv;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.HttpOverrides;

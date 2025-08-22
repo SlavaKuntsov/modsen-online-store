@@ -6,7 +6,7 @@ using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Common.Swagger;
+namespace Common.OpenApi;
 
 public static class ScalarExtension
 {
