@@ -13,9 +13,10 @@ public sealed class GetOrderByIdQueryHandler(IApplicationDbContext dbContext)
 {
 	public async Task<OrderDto> Handle(GetOrderByIdQuery request, CancellationToken ct)
 	{
-		var order = await dbContext.Orders
-			.Include(o => o.Items)
-			.FirstOrDefaultAsync(o => o.Id == request.OrderId && o.UserId == request.UserId, ct);
+                var order = await dbContext.Orders
+                        .Include(o => o.Items)
+                        .Include(o => o.PromoCode)
+                        .FirstOrDefaultAsync(o => o.Id == request.OrderId && o.UserId == request.UserId, ct);
 
 		if (order is null)
 			throw new NotFoundException($"Order {request.OrderId} not found");
@@ -24,6 +25,6 @@ public sealed class GetOrderByIdQueryHandler(IApplicationDbContext dbContext)
 			.Select(i => new OrderItemDto(i.ProductId, i.ProductName, i.UnitPrice, i.Quantity, i.UnitPrice * i.Quantity))
 			.ToList();
 
-		return new OrderDto(order.Id, order.UserId, items, order.Total, order.DeliveryMethod, order.ShippingAddress, order.CreatedAt, order.Status);
-	}
+                return new OrderDto(order.Id, order.UserId, items, order.Total, order.DiscountAmount, order.FinalTotal, order.DeliveryMethod, order.ShippingAddress, order.CreatedAt, order.Status, order.PromoCode?.Code);
+        }
 }

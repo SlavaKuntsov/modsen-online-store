@@ -12,11 +12,12 @@ public sealed class GetOrdersQueryHandler(IApplicationDbContext dbContext)
 {
 	public async Task<List<OrderDto>> Handle(GetOrdersQuery request, CancellationToken ct)
 	{
-		var orders = await dbContext.Orders
-			.Include(o => o.Items)
-			.Where(o => o.UserId == request.UserId)
-			.OrderByDescending(o => o.CreatedAt)
-			.ToListAsync(ct);
+                var orders = await dbContext.Orders
+                        .Include(o => o.Items)
+                        .Include(o => o.PromoCode)
+                        .Where(o => o.UserId == request.UserId)
+                        .OrderByDescending(o => o.CreatedAt)
+                        .ToListAsync(ct);
 
 		return orders.Select(Map).ToList();
 	}
@@ -26,6 +27,6 @@ public sealed class GetOrdersQueryHandler(IApplicationDbContext dbContext)
 		var items = order.Items
 			.Select(i => new OrderItemDto(i.ProductId, i.ProductName, i.UnitPrice, i.Quantity, i.UnitPrice * i.Quantity))
 			.ToList();
-		return new OrderDto(order.Id, order.UserId, items, order.Total, order.DeliveryMethod, order.ShippingAddress, order.CreatedAt, order.Status);
-	}
+                return new OrderDto(order.Id, order.UserId, items, order.Total, order.DiscountAmount, order.FinalTotal, order.DeliveryMethod, order.ShippingAddress, order.CreatedAt, order.Status, order.PromoCode?.Code);
+        }
 }
