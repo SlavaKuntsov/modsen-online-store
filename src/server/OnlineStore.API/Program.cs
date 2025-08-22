@@ -23,12 +23,18 @@ builder.Host.UseSerilog(
 	(context, config) =>
 		config.ReadFrom.Configuration(context.Configuration).Enrich.FromLogContext());
 
+const bool useSwagger = true;
+
 services
 		.AddCommon()
 		.AddExceptions()
                 .AddAuthorization(configuration)
-                .AddScalar()
                 .AddMapper();
+
+if (useSwagger)
+	services.AddSwagger();
+else
+	services.AddScalar();
 
 services
 		.AddApplication()
@@ -46,7 +52,18 @@ app.ApplyMigrations();
 
 app.UseExceptionHandler();
 
-app.UseScalar();
+if (useSwagger)
+{
+	app.UseSwagger();
+	app.UseSwaggerUI(
+		c =>
+		{
+			c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web API v1");
+		});
+}
+else
+	app.UseScalar();
+
 
 app.UseCookiePolicy(
 	new CookiePolicyOptions
