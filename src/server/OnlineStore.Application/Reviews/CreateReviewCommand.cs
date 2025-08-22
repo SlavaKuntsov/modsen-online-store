@@ -22,11 +22,11 @@ public sealed class CreateReviewCommandHandler(IApplicationDbContext dbContext, 
                 if (request.Rating < 1 || request.Rating > 5)
                         throw new ArgumentOutOfRangeException(nameof(request.Rating));
 
-                var product = await dbContext.Products.FindAsync(new object?[] { request.ProductId }, ct);
+                var product = await dbContext.Products.FindAsync([request.ProductId], ct);
                 if (product is null)
                         throw new InvalidOperationException("Product not found");
 
-                var review = new ProductReview(request.ProductId, userId, request.Rating, request.Comment);
+                ProductReview review = new(request.ProductId, userId, request.Rating, request.Comment);
                 await dbContext.ProductReviews.AddAsync(review, ct);
                 await dbContext.SaveChangesAsync(ct);
 
@@ -35,6 +35,6 @@ public sealed class CreateReviewCommandHandler(IApplicationDbContext dbContext, 
                         .AverageAsync(r => r.Rating, ct);
                 await dbContext.SaveChangesAsync(ct);
 
-                return new ReviewDto(review.Id, review.ProductId, review.UserId, review.Rating, review.Comment, review.CreatedAt);
+                return new(review.Id, review.ProductId, review.UserId, review.Rating, review.Comment, review.CreatedAt);
         }
 }

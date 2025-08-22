@@ -18,14 +18,14 @@ public sealed class AddFavoriteCommandHandler(IApplicationDbContext dbContext, I
                 if (userIdStr is null || !Guid.TryParse(userIdStr, out var userId))
                         throw new UnauthorizedAccessException("User not found");
 
-                var product = await dbContext.Products.FindAsync(new object?[] { request.ProductId }, ct);
+                var product = await dbContext.Products.FindAsync([request.ProductId], ct);
                 if (product is null)
                         throw new InvalidOperationException("Product not found");
 
                 var exists = await dbContext.Favorites.AnyAsync(f => f.UserId == userId && f.ProductId == request.ProductId, ct);
                 if (!exists)
                 {
-                        await dbContext.Favorites.AddAsync(new Favorite(userId, request.ProductId), ct);
+                        await dbContext.Favorites.AddAsync(new(userId, request.ProductId), ct);
                         await dbContext.SaveChangesAsync(ct);
                 }
         }

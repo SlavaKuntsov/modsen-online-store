@@ -52,8 +52,8 @@ public partial class Initial : Migration
 
 		migrationBuilder.InsertData(
 			table: "users",
-			columns: new[] { "id", "created_at", "date_of_birth", "email", "first_name", "last_name", "password_hash", "role" },
-			values: new object[] { new Guid("37fa2711-9d7f-47da-8741-810feaae586d"), new DateTimeOffset(new DateTime(2025, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0)), "01.01.0001", "admin@email.com", "admin", "admin", "$2a$11$7W0.dEc3LeGeNkNVUrB3eunfU1y8Vd/DgUuQtk4Fh59xRW6/c7kRW", "Admin" });
+                        columns: [ "id", "created_at", "date_of_birth", "email", "first_name", "last_name", "password_hash", "role" ],
+                        values: [ new Guid("37fa2711-9d7f-47da-8741-810feaae586d"), new DateTimeOffset(new DateTime(2025, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 3, 0, 0, 0)), "01.01.0001", "admin@email.com", "admin", "admin", "$2a$11$7W0.dEc3LeGeNkNVUrB3eunfU1y8Vd/DgUuQtk4Fh59xRW6/c7kRW", "Admin" ];
 
 		migrationBuilder.CreateIndex(
 			name: "ix_refresh_tokens_user_id",
