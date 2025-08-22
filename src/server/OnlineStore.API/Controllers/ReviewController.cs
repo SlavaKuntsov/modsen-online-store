@@ -29,4 +29,20 @@ public class ReviewController(IMediator mediator) : ControllerBase
                 return StatusCode(StatusCodes.Status201Created,
                                 new ApiResponse<ReviewDto>(StatusCodes.Status201Created, review, 1));
         }
+
+        [HttpPut("{id:guid}")]
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateReviewRequest request, CancellationToken ct = default)
+        {
+                var review = await mediator.Send(new UpdateReviewCommand(id, request.Rating, request.Comment), ct);
+                return Ok(new ApiResponse<ReviewDto>(StatusCodes.Status200OK, review, 1));
+        }
+
+        [HttpDelete("{id:guid}")]
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken ct = default)
+        {
+                await mediator.Send(new DeleteReviewCommand(id), ct);
+                return NoContent();
+        }
 }
