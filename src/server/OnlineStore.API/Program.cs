@@ -26,9 +26,9 @@ builder.Host.UseSerilog(
 services
 		.AddCommon()
 		.AddExceptions()
-		.AddAuthorization(configuration)
-		.AddSwagger()
-		.AddMapper();
+                .AddAuthorization(configuration)
+                .AddScalar()
+                .AddMapper();
 
 services
 		.AddApplication()
