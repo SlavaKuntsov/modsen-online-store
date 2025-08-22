@@ -11,7 +11,7 @@ public sealed record RemoveFavoriteCommand(Guid ProductId) : IRequest;
 public sealed class RemoveFavoriteCommandHandler(IApplicationDbContext dbContext, IHttpContextAccessor accessor)
         : IRequestHandler<RemoveFavoriteCommand>
 {
-        public async Task<Unit> Handle(RemoveFavoriteCommand request, CancellationToken ct)
+        public async Task Handle(RemoveFavoriteCommand request, CancellationToken ct)
         {
                 var userIdStr = accessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (userIdStr is null || !Guid.TryParse(userIdStr, out var userId))
@@ -24,6 +24,5 @@ public sealed class RemoveFavoriteCommandHandler(IApplicationDbContext dbContext
                         dbContext.Favorites.Remove(favorite);
                         await dbContext.SaveChangesAsync(ct);
                 }
-                return Unit.Value;
         }
 }

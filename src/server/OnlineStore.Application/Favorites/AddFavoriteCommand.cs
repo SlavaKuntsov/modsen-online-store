@@ -12,7 +12,7 @@ public sealed record AddFavoriteCommand(Guid ProductId) : IRequest;
 public sealed class AddFavoriteCommandHandler(IApplicationDbContext dbContext, IHttpContextAccessor accessor)
         : IRequestHandler<AddFavoriteCommand>
 {
-        public async Task<Unit> Handle(AddFavoriteCommand request, CancellationToken ct)
+        public async Task Handle(AddFavoriteCommand request, CancellationToken ct)
         {
                 var userIdStr = accessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (userIdStr is null || !Guid.TryParse(userIdStr, out var userId))
@@ -28,6 +28,5 @@ public sealed class AddFavoriteCommandHandler(IApplicationDbContext dbContext, I
                         await dbContext.Favorites.AddAsync(new Favorite(userId, request.ProductId), ct);
                         await dbContext.SaveChangesAsync(ct);
                 }
-                return Unit.Value;
         }
 }
