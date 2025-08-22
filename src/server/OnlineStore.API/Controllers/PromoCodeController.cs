@@ -36,4 +36,11 @@ public class PromoCodeController(IMediator mediator) : ControllerBase
                 var promo = await mediator.Send(new UpdatePromoCodeCommand(id, request.Code, request.DiscountPercentage, request.ExpirationDate, request.IsActive), ct);
                 return Ok(new ApiResponse<PromoCodeDto>(StatusCodes.Status200OK, promo, 1));
         }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken ct = default)
+        {
+                await mediator.Send(new DeletePromoCodeCommand(id), ct);
+                return NoContent();
+        }
 }
