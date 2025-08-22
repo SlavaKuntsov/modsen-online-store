@@ -1,6 +1,6 @@
 using OnlineStore.Domain.Enums;
 
-namespace OnlineStore.API.Contracts;
+namespace OnlineStore.API.Contracts.Order;
 
 public record PlaceOrderRequest(
 		string ShippingAddress,

@@ -1,6 +1,6 @@
-namespace OnlineStore.API.Contracts;
+namespace OnlineStore.API.Contracts.Product;
 
-public record UpdateProductRequest(
+public record CreateProductRequest(
 	string Name,
 	string Description,
 	decimal Price,

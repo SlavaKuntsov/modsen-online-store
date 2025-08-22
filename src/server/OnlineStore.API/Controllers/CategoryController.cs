@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.API.Contracts;
+using OnlineStore.API.Contracts.Category;
 using OnlineStore.Application.Categories;
 using OnlineStore.Application.Dtos;
 
