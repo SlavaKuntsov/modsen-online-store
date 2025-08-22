@@ -10,21 +10,21 @@ namespace OnlineStore.Application.Orders;
 public sealed record PayOrderCommand(Guid OrderId) : IRequest<OrderDto>;
 
 public sealed class PayOrderCommandHandler(IApplicationDbContext dbContext)
-        : IRequestHandler<PayOrderCommand, OrderDto>
+		: IRequestHandler<PayOrderCommand, OrderDto>
 {
-        public async Task<OrderDto> Handle(PayOrderCommand request, CancellationToken ct)
-        {
-                var order = await dbContext.Orders
-                        .Include(o => o.Items)
-                        .FirstOrDefaultAsync(o => o.Id == request.OrderId, ct);
-                if (order is null)
-                        throw new NotFoundException($"Order {request.OrderId} not found");
+	public async Task<OrderDto> Handle(PayOrderCommand request, CancellationToken ct)
+	{
+		var order = await dbContext.Orders
+				.Include(o => o.Items)
+				.FirstOrDefaultAsync(o => o.Id == request.OrderId, ct);
+		if (order is null)
+			throw new NotFoundException($"Order {request.OrderId} not found");
 
-                order.Status = OrderStatus.Completed;
-                await dbContext.SaveChangesAsync(ct);
+		order.Status = OrderStatus.Completed;
+		await dbContext.SaveChangesAsync(ct);
 
-                var items = order.Items.Select(i => new OrderItemDto(i.ProductId, i.ProductName, i.UnitPrice, i.Quantity, i.UnitPrice * i.Quantity)).ToList();
+		var items = order.Items.Select(i => new OrderItemDto(i.ProductId, i.ProductName, i.UnitPrice, i.Quantity, i.UnitPrice * i.Quantity)).ToList();
 
-                return new OrderDto(order.Id, order.UserId, items, order.Total, order.DeliveryMethod, order.ShippingAddress, order.CreatedAt, order.Status);
-        }
+		return new OrderDto(order.Id, order.UserId, items, order.Total, order.DeliveryMethod, order.ShippingAddress, order.CreatedAt, order.Status);
+	}
 }
