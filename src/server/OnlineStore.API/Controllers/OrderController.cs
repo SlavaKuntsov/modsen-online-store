@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using Asp.Versioning;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.API.Contracts;
 using OnlineStore.API.Contracts.Order;
@@ -14,12 +16,38 @@ namespace OnlineStore.API.Controllers;
 [ApiVersion("1.0")]
 public class OrderController(IMediator mediator) : ControllerBase
 {
+	[HttpGet]
+	[Authorize(Policy = "User")]
+	public async Task<IActionResult> Get(CancellationToken ct = default)
+	{
+		var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+				?? throw new UnauthorizedAccessException("User ID not found in claims.");
+		if (!Guid.TryParse(userIdClaim.Value, out var userId))
+			throw new UnauthorizedAccessException("Invalid User ID format in claims.");
+
+		var orders = await mediator.Send(new GetOrdersQuery(userId), ct);
+		return Ok(new ApiResponse<List<OrderDto>>(StatusCodes.Status200OK, orders, orders.Count));
+	}
+
+	[HttpGet("{id:guid}")]
+	[Authorize(Policy = "User")]
+	public async Task<IActionResult> GetById(Guid id, CancellationToken ct = default)
+	{
+		var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+				?? throw new UnauthorizedAccessException("User ID not found in claims.");
+		if (!Guid.TryParse(userIdClaim.Value, out var userId))
+			throw new UnauthorizedAccessException("Invalid User ID format in claims.");
+
+		var order = await mediator.Send(new GetOrderByIdQuery(id, userId), ct);
+		return Ok(new ApiResponse<OrderDto>(StatusCodes.Status200OK, order, 1));
+	}
+
 	[HttpPost]
 	public async Task<IActionResult> Create([FromBody] PlaceOrderRequest request, CancellationToken ct = default)
 	{
 		var order = await mediator.Send(new PlaceOrderCommand(request.ShippingAddress, request.DeliveryMethod), ct);
 		return StatusCode(StatusCodes.Status201Created,
-				new ApiResponse<OrderDto>(StatusCodes.Status201Created, order, 1));
+		new ApiResponse<OrderDto>(StatusCodes.Status201Created, order, 1));
 	}
 
 	[HttpPost("pay")]
