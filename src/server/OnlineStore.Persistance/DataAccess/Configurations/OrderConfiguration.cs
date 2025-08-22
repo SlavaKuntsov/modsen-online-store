@@ -10,9 +10,15 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 	{
 		builder.HasKey(o => o.Id);
 
+		builder.Property(o => o.UserId)
+				.IsRequired(false);
+
 		builder.Property(o => o.ShippingAddress).IsRequired();
 
 		builder.Property(o => o.DeliveryMethod)
+				.HasConversion<int>();
+
+		builder.Property(o => o.Status)
 				.HasConversion<int>();
 
 		builder.OwnsMany(o => o.Items, itemBuilder =>

@@ -19,4 +19,11 @@ public class OrderController(IMediator mediator) : ControllerBase
 		return StatusCode(StatusCodes.Status201Created,
 				new ApiResponse<OrderDto>(StatusCodes.Status201Created, order, 1));
 	}
+
+	[HttpPost("pay")]
+	public async Task<IActionResult> Pay([FromBody] PayOrderRequest request, CancellationToken ct = default)
+	{
+		var order = await mediator.Send(new PayOrderCommand(request.OrderId), ct);
+		return Ok(new ApiResponse<OrderDto>(StatusCodes.Status200OK, order, 1));
+	}
 }
