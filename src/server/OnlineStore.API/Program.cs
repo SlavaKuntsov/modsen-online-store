@@ -46,13 +46,7 @@ app.ApplyMigrations();
 
 app.UseExceptionHandler();
 
-app.UseSwagger();
-
-app.UseSwaggerUI(
-	c =>
-	{
-		c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web API v1");
-	});
+app.UseScalar();
 
 app.UseCookiePolicy(
 	new CookiePolicyOptions
