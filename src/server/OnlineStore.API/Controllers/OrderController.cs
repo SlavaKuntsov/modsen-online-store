@@ -42,13 +42,13 @@ public class OrderController(IMediator mediator) : ControllerBase
 		return Ok(new ApiResponse<OrderDto>(StatusCodes.Status200OK, order, 1));
 	}
 
-	[HttpPost]
-	public async Task<IActionResult> Create([FromBody] PlaceOrderRequest request, CancellationToken ct = default)
-	{
-		var order = await mediator.Send(new PlaceOrderCommand(request.ShippingAddress, request.DeliveryMethod), ct);
-		return StatusCode(StatusCodes.Status201Created,
-		new ApiResponse<OrderDto>(StatusCodes.Status201Created, order, 1));
-	}
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] PlaceOrderRequest request, CancellationToken ct = default)
+        {
+                var order = await mediator.Send(new PlaceOrderCommand(request.ShippingAddress, request.DeliveryMethod, request.PromoCode), ct);
+                return StatusCode(StatusCodes.Status201Created,
+                new ApiResponse<OrderDto>(StatusCodes.Status201Created, order, 1));
+        }
 
 	[HttpPost("pay")]
 	public async Task<IActionResult> Pay([FromBody] PayOrderRequest request, CancellationToken ct = default)
