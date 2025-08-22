@@ -1,3 +1,3 @@
-namespace OnlineStore.API.Contracts;
+namespace OnlineStore.API.Contracts.Cart;
 
 public record UpdateCartItemRequest(Guid ProductId, int Quantity);

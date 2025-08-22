@@ -15,12 +15,12 @@ public class EmailService(
 
 	public async Task SendEmailAsync(string recipient, string subject, string body)
 	{
-		var email = _emailOptions.Email != ""
+		var email = !string.IsNullOrWhiteSpace(_emailOptions.Email)
 			? _emailOptions.Email
 			: Environment.GetEnvironmentVariable("EMAIL_EMAIL");
 
-		var password = _emailOptions.Password != ""
-			? _emailOptions.Email
+		var password = !string.IsNullOrWhiteSpace(_emailOptions.Password)
+			? _emailOptions.Password
 			: Environment.GetEnvironmentVariable("EMAIL_PASSWORD");
 
 		using SmtpClient smtpClient = new(_emailOptions.Server, _emailOptions.Port);

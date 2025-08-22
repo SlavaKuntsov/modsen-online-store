@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.API.Contracts;
+using OnlineStore.API.Contracts.Cart;
 using OnlineStore.Application.Carts;
 using OnlineStore.Domain.Entities;
 

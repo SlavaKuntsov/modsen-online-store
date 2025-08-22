@@ -1,3 +1,3 @@
-namespace OnlineStore.API.Contracts;
+namespace OnlineStore.API.Contracts.Order;
 
 public record PayOrderRequest(Guid OrderId);
