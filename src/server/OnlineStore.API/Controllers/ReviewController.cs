@@ -14,35 +14,35 @@ namespace OnlineStore.API.Controllers;
 [ApiVersion("1.0")]
 public class ReviewController(IMediator mediator) : ControllerBase
 {
-        [HttpGet("{productId:guid}")]
-        public async Task<IActionResult> Get(Guid productId, CancellationToken ct = default)
-        {
-                var reviews = await mediator.Send(new GetReviewsQuery(productId), ct);
-                return Ok(new ApiResponse<List<ReviewDto>>(StatusCodes.Status200OK, reviews, reviews.Count));
-        }
+	[HttpGet("{productId:guid}")]
+	public async Task<IActionResult> Get(Guid productId, CancellationToken ct = default)
+	{
+		var reviews = await mediator.Send(new GetReviewsQuery(productId), ct);
+		return Ok(new ApiResponse<List<ReviewDto>>(StatusCodes.Status200OK, reviews, reviews.Count));
+	}
 
-        [HttpPost]
-        [Authorize(Policy = "User")]
-        public async Task<IActionResult> Create([FromBody] CreateReviewRequest request, CancellationToken ct = default)
-        {
-                var review = await mediator.Send(new CreateReviewCommand(request.ProductId, request.Rating, request.Comment), ct);
-                return StatusCode(StatusCodes.Status201Created,
-                                new ApiResponse<ReviewDto>(StatusCodes.Status201Created, review, 1));
-        }
+	[HttpPost]
+	[Authorize(Policy = "User")]
+	public async Task<IActionResult> Create([FromBody] CreateReviewRequest request, CancellationToken ct = default)
+	{
+		var review = await mediator.Send(new CreateReviewCommand(request.ProductId, request.Rating, request.Comment), ct);
+		return StatusCode(StatusCodes.Status201Created,
+						new ApiResponse<ReviewDto>(StatusCodes.Status201Created, review, 1));
+	}
 
-        [HttpPut("{id:guid}")]
-        [Authorize(Policy = "Admin")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateReviewRequest request, CancellationToken ct = default)
-        {
-                var review = await mediator.Send(new UpdateReviewCommand(id, request.Rating, request.Comment), ct);
-                return Ok(new ApiResponse<ReviewDto>(StatusCodes.Status200OK, review, 1));
-        }
+	[HttpPut("{id:guid}")]
+	[Authorize(Policy = "Admin")]
+	public async Task<IActionResult> Update(Guid id, [FromBody] UpdateReviewRequest request, CancellationToken ct = default)
+	{
+		var review = await mediator.Send(new UpdateReviewCommand(id, request.Rating, request.Comment), ct);
+		return Ok(new ApiResponse<ReviewDto>(StatusCodes.Status200OK, review, 1));
+	}
 
-        [HttpDelete("{id:guid}")]
-        [Authorize(Policy = "Admin")]
-        public async Task<IActionResult> Delete(Guid id, CancellationToken ct = default)
-        {
-                await mediator.Send(new DeleteReviewCommand(id), ct);
-                return NoContent();
-        }
+	[HttpDelete("{id:guid}")]
+	[Authorize(Policy = "Admin")]
+	public async Task<IActionResult> Delete(Guid id, CancellationToken ct = default)
+	{
+		await mediator.Send(new DeleteReviewCommand(id), ct);
+		return NoContent();
+	}
 }
