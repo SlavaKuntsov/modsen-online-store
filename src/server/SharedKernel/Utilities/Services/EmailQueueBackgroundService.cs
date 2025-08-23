@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
@@ -6,11 +7,12 @@ using StackExchange.Redis;
 namespace Utilities.Services;
 
 public class EmailQueueBackgroundService(
-	IConnectionMultiplexer redis,
 	IEmailService emailService,
-	ILogger<EmailQueueBackgroundService> logger) : BackgroundService
+	IDistributedCache cache,
+	ILogger<EmailQueueBackgroundService> logger,
+	IConnectionMultiplexer? redis = null) : BackgroundService
 {
-	private readonly IDatabase _db = redis.GetDatabase();
+	private readonly IDatabase? _db = redis?.GetDatabase();
 	private const string QueueKey = "email_queue";
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -19,14 +21,35 @@ public class EmailQueueBackgroundService(
 		{
 			try
 			{
-				var value = await _db.ListLeftPopAsync(QueueKey);
-				if (value.HasValue)
+				EmailMessage? message = null;
+
+				if (_db is not null)
 				{
-					var message = JsonSerializer.Deserialize<EmailMessage>(value!);
-					if (message is not null)
+					var value = await _db.ListLeftPopAsync(QueueKey);
+					if (value.HasValue)
 					{
-						await emailService.SendEmailAsync(message.Recipient, message.Subject, message.Body);
+						message = JsonSerializer.Deserialize<EmailMessage>(value!);
 					}
+				}
+				else
+				{
+					var listJson = await cache.GetStringAsync(QueueKey, token: stoppingToken);
+					if (!string.IsNullOrEmpty(listJson))
+					{
+						var list = JsonSerializer.Deserialize<List<string>>(listJson!) ?? new List<string>();
+						if (list.Count > 0)
+						{
+							var first = list[0];
+							list.RemoveAt(0);
+							await cache.SetStringAsync(QueueKey, JsonSerializer.Serialize(list), token: stoppingToken);
+							message = JsonSerializer.Deserialize<EmailMessage>(first);
+						}
+					}
+				}
+
+				if (message is not null)
+				{
+					await emailService.SendEmailAsync(message.Recipient, message.Subject, message.Body);
 				}
 				else
 				{

@@ -51,11 +51,11 @@ public class OrderController(IMediator mediator) : ControllerBase
 		new ApiResponse<OrderDto>(StatusCodes.Status201Created, order, 1));
 	}
 
-	[HttpPost("{orderId:guid}/pay")]
+	[HttpPost("pay")]
 	[Authorize(Policy = "User")]
-	public async Task<IActionResult> Pay(Guid orderId, CancellationToken ct = default)
+	public async Task<IActionResult> Pay([FromBody] PayOrderRequest request, CancellationToken ct = default)
 	{
-		var order = await mediator.Send(new PayOrderCommand(orderId), ct);
+		var order = await mediator.Send(new PayOrderCommand(request.OrderId), ct);
 		return Ok(new ApiResponse<OrderDto>(StatusCodes.Status200OK, order, 1));
 	}
 

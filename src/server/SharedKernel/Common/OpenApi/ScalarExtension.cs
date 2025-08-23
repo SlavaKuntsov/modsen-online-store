@@ -37,14 +37,14 @@ public static class ScalarExtension
 					options.AddSecurityDefinition(
 									"Bearer",
 									new OpenApiSecurityScheme
-									{
-										Name = "Authorization",
-										In = ParameterLocation.Header,
-										Type = SecuritySchemeType.Http,
-										Scheme = "Bearer",
-										BearerFormat = "JWT",
-										Description = "Введите токен JWT в формате 'Bearer {токен}'",
-									});
+								{
+									Name = "Authorization",
+									In = ParameterLocation.Header,
+									Type = SecuritySchemeType.Http,
+									Scheme = "Bearer",
+									BearerFormat = "JWT",
+									Description = "Введите токен JWT в формате 'Bearer {токен}'",
+								});
 
 					options.AddSecurityRequirement(
 									new OpenApiSecurityRequirement
