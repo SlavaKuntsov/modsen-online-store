@@ -17,10 +17,10 @@ public sealed record PlaceOrderCommand(
 
 public sealed class PlaceOrderCommandHandler(
 		IApplicationDbContext dbContext,
-                ICartService cartService,
-                IEmailQueueService emailQueueService,
-                IValidator<PlaceOrderCommand> validator)
-                : IRequestHandler<PlaceOrderCommand, OrderDto>
+				ICartService cartService,
+				IEmailQueueService emailQueueService,
+				IValidator<PlaceOrderCommand> validator)
+				: IRequestHandler<PlaceOrderCommand, OrderDto>
 {
 	public async Task<OrderDto> Handle(PlaceOrderCommand request, CancellationToken ct)
 	{
@@ -81,13 +81,13 @@ public sealed class PlaceOrderCommandHandler(
 		cart.Items.Clear();
 		await dbContext.SaveChangesAsync(ct);
 
-                if (user is not null)
-                {
-                        await emailQueueService.EnqueueEmailAsync(
-                                user.Email,
-                                "Order Confirmation",
-                                $"Your order {order.Id} has been placed.");
-                }
+		if (user is not null)
+		{
+			await emailQueueService.EnqueueEmailAsync(
+					user.Email,
+					"Order Confirmation",
+					$"Your order {order.Id} has been placed.");
+		}
 
 		var dtoItems = order.Items.Select(i => new OrderItemDto(i.ProductId, i.ProductName, i.UnitPrice, i.Quantity, i.UnitPrice * i.Quantity)).ToList();
 
