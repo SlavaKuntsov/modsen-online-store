@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.API.Contracts;
-using OnlineStore.API.Contracts.Favorite;
 using OnlineStore.Application.Dtos;
 using OnlineStore.Application.Favorites;
 
@@ -22,10 +21,10 @@ public class FavoriteController(IMediator mediator) : ControllerBase
                 return Ok(new ApiResponse<List<FavoriteDto>>(StatusCodes.Status200OK, favorites, favorites.Count));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Add([FromBody] AddFavoriteRequest request, CancellationToken ct = default)
+        [HttpPost("{productId:guid}")]
+        public async Task<IActionResult> Add(Guid productId, CancellationToken ct = default)
         {
-                await mediator.Send(new AddFavoriteCommand(request.ProductId), ct);
+                await mediator.Send(new AddFavoriteCommand(productId), ct);
                 return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Added", 0));
         }
 
