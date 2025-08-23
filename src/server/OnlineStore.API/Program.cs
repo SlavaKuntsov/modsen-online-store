@@ -28,8 +28,8 @@ const bool useSwagger = true;
 services
 		.AddCommon()
 		.AddExceptions()
-                .AddAuthorization(configuration)
-                .AddMapper();
+				.AddAuthorization(configuration)
+				.AddMapper();
 
 if (useSwagger)
 	services.AddSwagger();
@@ -62,8 +62,9 @@ if (useSwagger)
 		});
 }
 else
+{
 	app.UseScalar();
-
+}
 
 app.UseCookiePolicy(
 	new CookiePolicyOptions
