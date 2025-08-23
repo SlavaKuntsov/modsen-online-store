@@ -17,11 +17,11 @@ public class Jwt(IOptions<JwtOptions> jwtOptions) : IJwt
 
 	public string GenerateAccessToken(Guid id, Role role)
 	{
-                Claim[] claims =
-                [
-                        new(ClaimTypes.NameIdentifier, id.ToString()),
-                        new(ClaimTypes.Role, role.GetDescription())
-                ];
+		Claim[] claims =
+		[
+				new(ClaimTypes.NameIdentifier, id.ToString()),
+						new(ClaimTypes.Role, role.GetDescription())
+		];
 
 		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
 		var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

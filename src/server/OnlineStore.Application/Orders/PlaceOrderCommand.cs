@@ -11,16 +11,16 @@ using Utilities.Services;
 namespace OnlineStore.Application.Orders;
 
 public sealed record PlaceOrderCommand(
-                string ShippingAddress,
-                DeliveryMethod DeliveryMethod,
-                string? PromoCode) : IRequest<OrderDto>;
+				string ShippingAddress,
+				DeliveryMethod DeliveryMethod,
+				string? PromoCode) : IRequest<OrderDto>;
 
 public sealed class PlaceOrderCommandHandler(
 		IApplicationDbContext dbContext,
-                ICartService cartService,
-                IEmailQueueService emailQueueService,
-                IValidator<PlaceOrderCommand> validator)
-                : IRequestHandler<PlaceOrderCommand, OrderDto>
+				ICartService cartService,
+				IEmailQueueService emailQueueService,
+				IValidator<PlaceOrderCommand> validator)
+				: IRequestHandler<PlaceOrderCommand, OrderDto>
 {
 	public async Task<OrderDto> Handle(PlaceOrderCommand request, CancellationToken ct)
 	{
@@ -28,9 +28,9 @@ public sealed class PlaceOrderCommandHandler(
 		if (!validationResult.IsValid)
 			throw new ValidationException(validationResult.Errors);
 
-                var cart = await cartService.GetCartAsync();
-                if (cart.Items.Count == 0)
-                        throw new InvalidOperationException("Cart is empty");
+		var cart = await cartService.GetCartAsync();
+		if (cart.Items.Count == 0)
+			throw new InvalidOperationException("Cart is empty");
 
 		User? user = null;
 		if (cart.UserId.HasValue)
@@ -60,37 +60,37 @@ public sealed class PlaceOrderCommandHandler(
 			});
 		}
 
-                PromoCode? promo = null;
-                decimal discount = 0;
-                if (!string.IsNullOrWhiteSpace(request.PromoCode))
-                {
-                        promo = await dbContext.PromoCodes
-                                .FirstOrDefaultAsync(p => p.Code == request.PromoCode && p.IsActive && p.ExpirationDate >= DateTime.UtcNow, ct);
-                        if (promo is null)
-                                throw new InvalidOperationException("Invalid promo code");
-                        discount = items.Sum(i => i.UnitPrice * i.Quantity) * (promo.DiscountPercentage / 100m);
-                }
+		PromoCode? promo = null;
+		decimal discount = 0;
+		if (!string.IsNullOrWhiteSpace(request.PromoCode))
+		{
+			promo = await dbContext.PromoCodes
+					.FirstOrDefaultAsync(p => p.Code == request.PromoCode && p.IsActive && p.ExpirationDate >= DateTime.UtcNow, ct);
+			if (promo is null)
+				throw new InvalidOperationException("Invalid promo code");
+			discount = items.Sum(i => i.UnitPrice * i.Quantity) * (promo.DiscountPercentage / 100m);
+		}
 
-                var order = new Order(cart.UserId, request.DeliveryMethod, request.ShippingAddress, items)
-                {
-                        PromoCodeId = promo?.Id,
-                        DiscountAmount = discount
-                };
+		var order = new Order(cart.UserId, request.DeliveryMethod, request.ShippingAddress, items)
+		{
+			PromoCodeId = promo?.Id,
+			DiscountAmount = discount
+		};
 		await dbContext.Orders.AddAsync(order, ct);
 
 		cart.Items.Clear();
 		await dbContext.SaveChangesAsync(ct);
 
-                if (user is not null)
-                {
-                        await emailQueueService.EnqueueEmailAsync(
-                                user.Email,
-                                "Order Confirmation",
-                                $"Your order {order.Id} has been placed.");
-                }
+		if (user is not null)
+		{
+			await emailQueueService.EnqueueEmailAsync(
+					user.Email,
+					"Order Confirmation",
+					$"Your order {order.Id} has been placed.");
+		}
 
-                var dtoItems = order.Items.Select(i => new OrderItemDto(i.ProductId, i.ProductName, i.UnitPrice, i.Quantity, i.UnitPrice * i.Quantity)).ToList();
+		var dtoItems = order.Items.Select(i => new OrderItemDto(i.ProductId, i.ProductName, i.UnitPrice, i.Quantity, i.UnitPrice * i.Quantity)).ToList();
 
-                return new OrderDto(order.Id, order.UserId, dtoItems, order.Total, order.DiscountAmount, order.FinalTotal, order.DeliveryMethod, order.ShippingAddress, order.CreatedAt, order.Status, promo?.Code);
-        }
+		return new OrderDto(order.Id, order.UserId, dtoItems, order.Total, order.DiscountAmount, order.FinalTotal, order.DeliveryMethod, order.ShippingAddress, order.CreatedAt, order.Status, promo?.Code);
+	}
 }

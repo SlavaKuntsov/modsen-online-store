@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
@@ -43,8 +43,10 @@ public class RedisCacheService : IRedisCacheService
 			_redisAvailabilityChecked = isAvailable;
 
 			if (!isAvailable)
+			{
 				_logger.LogWarning(
 					"Redis has been marked as unavailable. Caching will be disabled for all requests.");
+			}
 		}
 	}
 

@@ -10,10 +10,10 @@ namespace OnlineStore.Application.Auth;
 public sealed record ForgotPasswordCommand(string Email) : IRequest;
 
 public sealed class ForgotPasswordCommandHandler(
-        IApplicationDbContext dbContext,
-        IResetPassword resetPassword,
-        IEmailQueueService emailQueueService)
-        : IRequestHandler<ForgotPasswordCommand>
+		IApplicationDbContext dbContext,
+		IResetPassword resetPassword,
+		IEmailQueueService emailQueueService)
+		: IRequestHandler<ForgotPasswordCommand>
 {
 	public async Task Handle(ForgotPasswordCommand request, CancellationToken ct = default)
 	{
@@ -46,15 +46,15 @@ public sealed class ForgotPasswordCommandHandler(
 		// var resetLink = $"https://frontend.example.com/reset-password?userId={user.Id}&token={Uri.EscapeDataString(token)}";
 		var resetLink = tokenValue;
 
-                await emailQueueService.EnqueueEmailAsync(
-                        user.Email,
-                        "Password Reset",
-                        $"""
+		await emailQueueService.EnqueueEmailAsync(
+				user.Email,
+				"Password Reset",
+				$"""
                         Reset token:
                         <div style="font-family: monospace; background-color: #f5f5f5; padding: 10px; border-radius: 5px; word-break: break-all;">
                                 {resetLink}
                         </div>
                         """
-                );
+		);
 	}
 }
