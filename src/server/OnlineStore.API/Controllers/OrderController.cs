@@ -42,22 +42,22 @@ public class OrderController(IMediator mediator) : ControllerBase
 		return Ok(new ApiResponse<OrderDto>(StatusCodes.Status200OK, order, 1));
 	}
 
-	[HttpPost]
-	[Authorize(Policy = "User")]
-	public async Task<IActionResult> Create([FromBody] PlaceOrderRequest request, CancellationToken ct = default)
-	{
-		var order = await mediator.Send(new PlaceOrderCommand(request.ShippingAddress, request.DeliveryMethod, request.PromoCode), ct);
-		return StatusCode(StatusCodes.Status201Created,
-		new ApiResponse<OrderDto>(StatusCodes.Status201Created, order, 1));
-	}
+        [HttpPost]
+        [Authorize(Policy = "User")]
+        public async Task<IActionResult> Create([FromBody] PlaceOrderRequest request, CancellationToken ct = default)
+        {
+                var order = await mediator.Send(new PlaceOrderCommand(request.ShippingAddress, request.DeliveryMethod, request.PromoCode), ct);
+                return StatusCode(StatusCodes.Status201Created,
+                new ApiResponse<OrderDto>(StatusCodes.Status201Created, order, 1));
+        }
 
-	[HttpPost("pay")]
-	[Authorize(Policy = "User")]
-	public async Task<IActionResult> Pay([FromBody] PayOrderRequest request, CancellationToken ct = default)
-	{
-		var order = await mediator.Send(new PayOrderCommand(request.OrderId), ct);
-		return Ok(new ApiResponse<OrderDto>(StatusCodes.Status200OK, order, 1));
-	}
+        [HttpPost("{orderId:guid}/pay")]
+        [Authorize(Policy = "User")]
+        public async Task<IActionResult> Pay(Guid orderId, CancellationToken ct = default)
+        {
+                var order = await mediator.Send(new PayOrderCommand(orderId), ct);
+                return Ok(new ApiResponse<OrderDto>(StatusCodes.Status200OK, order, 1));
+        }
 
 	[HttpGet("delivery-methods")]
 	public IActionResult GetDeliveryMethods()

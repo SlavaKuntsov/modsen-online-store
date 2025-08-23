@@ -114,14 +114,13 @@ public class AuthControllers(
 				new ApiResponse<TokensDto>(StatusCodes.Status201Created, tokens, 1));
 	}
 
-	[HttpPost("forgot-password")]
-	[SwaggerRequestExample(typeof(ForgotPasswordCommand), typeof(ForgotPasswordExample))]
-	public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand request, CancellationToken ct = default)
-	{
-		await mediator.Send(request, ct);
+        [HttpPost("forgot-password/{email}")]
+        public async Task<IActionResult> ForgotPassword(string email, CancellationToken ct = default)
+        {
+                await mediator.Send(new ForgotPasswordCommand(email), ct);
 
-		return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "If the email exists, a reset link was sent.", null));
-	}
+                return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "If the email exists, a reset link was sent.", null));
+        }
 
 	[HttpPost("reset-password")]
 	[SwaggerRequestExample(typeof(ResetPasswordRequest), typeof(ResetPasswordExample))]
