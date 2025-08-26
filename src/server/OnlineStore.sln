@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "SharedKernel\U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redis", "SharedKernel\Redis\Redis.csproj", "{B2A52B4B-F94D-4B25-8F34-84FCA26EDBD5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Minios", "SharedKernel\Minios\Minios.csproj", "{C852F997-8B14-4664-B362-E73F502487C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,10 +80,14 @@ Global
 		{F773D1F0-DF9A-4E72-82E5-8C297F10FB25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F773D1F0-DF9A-4E72-82E5-8C297F10FB25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F773D1F0-DF9A-4E72-82E5-8C297F10FB25}.Release|Any CPU.Build.0 = Release|Any CPU
-                {B2A52B4B-F94D-4B25-8F34-84FCA26EDBD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-                {B2A52B4B-F94D-4B25-8F34-84FCA26EDBD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-                {B2A52B4B-F94D-4B25-8F34-84FCA26EDBD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-                {B2A52B4B-F94D-4B25-8F34-84FCA26EDBD5}.Release|Any CPU.Build.0 = Release|Any CPU
+																{B2A52B4B-F94D-4B25-8F34-84FCA26EDBD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+																{B2A52B4B-F94D-4B25-8F34-84FCA26EDBD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+																{B2A52B4B-F94D-4B25-8F34-84FCA26EDBD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+																{B2A52B4B-F94D-4B25-8F34-84FCA26EDBD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C852F997-8B14-4664-B362-E73F502487C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C852F997-8B14-4664-B362-E73F502487C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C852F997-8B14-4664-B362-E73F502487C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C852F997-8B14-4664-B362-E73F502487C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +105,7 @@ Global
 		{602121F9-732B-48E1-852E-D150F29EC157} = {2C56C3D9-147F-43B0-9349-7AFBCA76DF22}
 		{9E535C87-997A-4387-9600-50B05F62E2E7} = {2C56C3D9-147F-43B0-9349-7AFBCA76DF22}
 		{F773D1F0-DF9A-4E72-82E5-8C297F10FB25} = {2C56C3D9-147F-43B0-9349-7AFBCA76DF22}
-                {B2A52B4B-F94D-4B25-8F34-84FCA26EDBD5} = {2C56C3D9-147F-43B0-9349-7AFBCA76DF22}
+																{B2A52B4B-F94D-4B25-8F34-84FCA26EDBD5} = {2C56C3D9-147F-43B0-9349-7AFBCA76DF22}
+		{C852F997-8B14-4664-B362-E73F502487C5} = {2C56C3D9-147F-43B0-9349-7AFBCA76DF22}
 	EndGlobalSection
 EndGlobal
