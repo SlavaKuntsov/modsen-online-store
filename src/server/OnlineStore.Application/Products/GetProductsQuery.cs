@@ -21,8 +21,8 @@ public sealed class GetProductsQueryHandler(IApplicationDbContext dbContext, IMi
 	public async Task<List<ProductDto>> Handle(GetProductsQuery request, CancellationToken ct)
 	{
 		IQueryable<Domain.Entities.Product> query = dbContext.Products
-				.Include(p => p.Images)
-				.AsQueryable();
+						.Include(p => p.Image)
+						.AsQueryable();
 
 		if (request.CategoryId.HasValue)
 			query = query.Where(p => p.CategoryId == request.CategoryId.Value);
@@ -61,23 +61,21 @@ public sealed class GetProductsQueryHandler(IApplicationDbContext dbContext, IMi
 		var result = new List<ProductDto>();
 		foreach (var p in products)
 		{
-			var urls = new List<string>();
-			foreach (var img in p.Images)
-			{
-				urls.Add(await minioService.GetPresignedUrlAsync(null, img.ObjectName));
-			}
+			string? url = null;
+			if (p.Image is not null)
+				url = await minioService.GetPresignedUrlAsync(null, p.Image.ObjectName);
 
 			result.Add(new ProductDto(
-					p.Id,
-					p.Name,
-					p.Description,
-					p.Price,
-					p.StockQuantity,
-					p.CategoryId,
-					p.Rating,
-					p.Popularity,
-					p.CreatedAt,
-					urls));
+							p.Id,
+							p.Name,
+							p.Description,
+							p.Price,
+							p.StockQuantity,
+							p.CategoryId,
+							p.Rating,
+							p.Popularity,
+							p.CreatedAt,
+							url));
 		}
 
 		return result;

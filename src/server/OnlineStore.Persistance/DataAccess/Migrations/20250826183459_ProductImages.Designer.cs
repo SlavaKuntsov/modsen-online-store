@@ -256,6 +256,7 @@ namespace OnlineStore.Persistance.DataAccess.Migrations
                         .HasName("pk_product_images");
 
                     b.HasIndex("ProductId")
+                        .IsUnique()
                         .HasDatabaseName("ix_product_images_product_id");
 
                     b.ToTable("product_images", (string)null);
@@ -578,8 +579,8 @@ namespace OnlineStore.Persistance.DataAccess.Migrations
             modelBuilder.Entity("OnlineStore.Domain.Entities.ProductImage", b =>
                 {
                     b.HasOne("OnlineStore.Domain.Entities.Product", "Product")
-                        .WithMany("Images")
-                        .HasForeignKey("ProductId")
+                        .WithOne("Image")
+                        .HasForeignKey("OnlineStore.Domain.Entities.ProductImage", "ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_product_images_products_product_id");
@@ -629,7 +630,7 @@ namespace OnlineStore.Persistance.DataAccess.Migrations
 
             modelBuilder.Entity("OnlineStore.Domain.Entities.Product", b =>
                 {
-                    b.Navigation("Images");
+                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("OnlineStore.Domain.Entities.User", b =>

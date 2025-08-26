@@ -36,7 +36,7 @@ public sealed class CreateProductCommandHandler(IApplicationDbContext dbContext)
 						product.CategoryId,
 						product.Rating,
 						product.Popularity,
-						product.CreatedAt,
-						new List<string>());
+												product.CreatedAt,
+												null);
 	}
 }

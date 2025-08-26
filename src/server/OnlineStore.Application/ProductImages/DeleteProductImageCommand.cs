@@ -5,20 +5,21 @@ using OnlineStore.Application.Abstractions.Data;
 
 namespace OnlineStore.Application.ProductImages;
 
-public sealed record DeleteProductImageCommand(Guid ImageId) : IRequest;
+public sealed record DeleteProductImageCommand(Guid ProductId) : IRequest;
 
 public sealed class DeleteProductImageCommandHandler(IApplicationDbContext dbContext, IMinioService minioService)
 		: IRequestHandler<DeleteProductImageCommand>
 {
 	public async Task Handle(DeleteProductImageCommand request, CancellationToken ct)
 	{
-		var image = await dbContext.ProductImages
-			.FirstOrDefaultAsync(i => i.Id == request.ImageId, ct);
-		if (image is null)
+		var product = await dbContext.Products
+				.Include(p => p.Image)
+				.FirstOrDefaultAsync(p => p.Id == request.ProductId, ct);
+		if (product?.Image is null)
 			return;
 
-		await minioService.RemoveFileAsync(null, image.ObjectName);
-		dbContext.ProductImages.Remove(image);
+		await minioService.RemoveFileAsync(null, product.Image.ObjectName);
+		dbContext.ProductImages.Remove(product.Image);
 		await dbContext.SaveChangesAsync(ct);
 	}
 }

@@ -68,7 +68,9 @@ public static class MinioExtension
 				logger.LogInformation("[MinIO] Bucket '{BucketName}' created.", bucketName);
 			}
 			else
+			{
 				logger.LogInformation("[MinIO] Bucket '{BucketName}' already exists.", bucketName);
+			}
 		}
 	}
 }

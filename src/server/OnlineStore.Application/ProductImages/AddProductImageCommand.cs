@@ -16,9 +16,13 @@ public sealed class AddProductImageCommandHandler(IApplicationDbContext dbContex
 	public async Task<string> Handle(AddProductImageCommand request, CancellationToken ct)
 	{
 		var product = await dbContext.Products
-			.FirstOrDefaultAsync(p => p.Id == request.ProductId, ct);
+				.Include(p => p.Image)
+				.FirstOrDefaultAsync(p => p.Id == request.ProductId, ct);
 		if (product is null)
 			throw new NotFoundException($"Product with id '{request.ProductId}' not found");
+
+		if (product.Image is not null)
+			throw new AlreadyExistsException("Product already has an image");
 
 		var objectName = minioService.CreateObjectName(request.File.FileName);
 		await minioService.UploadFileAsync(null, objectName, request.File.OpenReadStream(), request.File.ContentType);
@@ -31,7 +35,8 @@ public sealed class AddProductImageCommandHandler(IApplicationDbContext dbContex
 			CreatedAt = DateTime.UtcNow
 		};
 
-		await dbContext.ProductImages.AddAsync(image, ct);
+		product.Image = image;
+		dbContext.ProductImages.Add(image);
 		await dbContext.SaveChangesAsync(ct);
 
 		return await minioService.GetPresignedUrlAsync(null, objectName);
