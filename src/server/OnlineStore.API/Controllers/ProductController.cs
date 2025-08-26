@@ -83,17 +83,19 @@ public class ProductController(IMediator mediator) : ControllerBase
 
         [HttpPost("{id}/images")]
         [Authorize(Policy = "Admin")]
-        public async Task<IActionResult> AddImage(Guid id, [FromForm] IFormFile file, CancellationToken ct = default)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> AddImage(Guid id, [FromForm] AddProductImageRequest request, CancellationToken ct = default)
         {
-                var url = await mediator.Send(new AddProductImageCommand(id, file), ct);
+                var url = await mediator.Send(new AddProductImageCommand(id, request.File), ct);
                 return Ok(new ApiResponse<string>(StatusCodes.Status200OK, url, 1));
         }
 
         [HttpPut("{id}/images/{imageId}")]
         [Authorize(Policy = "Admin")]
-        public async Task<IActionResult> UpdateImage(Guid id, Guid imageId, [FromForm] IFormFile file, CancellationToken ct = default)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UpdateImage(Guid id, Guid imageId, [FromForm] UpdateProductImageRequest request, CancellationToken ct = default)
         {
-                var url = await mediator.Send(new UpdateProductImageCommand(imageId, file), ct);
+                var url = await mediator.Send(new UpdateProductImageCommand(imageId, request.File), ct);
                 return Ok(new ApiResponse<string>(StatusCodes.Status200OK, url, 1));
         }
 
