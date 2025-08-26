@@ -20,9 +20,9 @@ public sealed class GetProductsQueryHandler(IApplicationDbContext dbContext, IMi
 {
 	public async Task<List<ProductDto>> Handle(GetProductsQuery request, CancellationToken ct)
 	{
-                IQueryable<Domain.Entities.Product> query = dbContext.Products
-                                .Include(p => p.Image)
-                                .AsQueryable();
+		IQueryable<Domain.Entities.Product> query = dbContext.Products
+						.Include(p => p.Image)
+						.AsQueryable();
 
 		if (request.CategoryId.HasValue)
 			query = query.Where(p => p.CategoryId == request.CategoryId.Value);
@@ -58,26 +58,26 @@ public sealed class GetProductsQueryHandler(IApplicationDbContext dbContext, IMi
 
 		var products = await query.ToListAsync(ct);
 
-                var result = new List<ProductDto>();
-                foreach (var p in products)
-                {
-                        string? url = null;
-                        if (p.Image is not null)
-                                url = await minioService.GetPresignedUrlAsync(null, p.Image.ObjectName);
+		var result = new List<ProductDto>();
+		foreach (var p in products)
+		{
+			string? url = null;
+			if (p.Image is not null)
+				url = await minioService.GetPresignedUrlAsync(null, p.Image.ObjectName);
 
-                        result.Add(new ProductDto(
-                                        p.Id,
-                                        p.Name,
-                                        p.Description,
-                                        p.Price,
-                                        p.StockQuantity,
-                                        p.CategoryId,
-                                        p.Rating,
-                                        p.Popularity,
-                                        p.CreatedAt,
-                                        url));
-                }
+			result.Add(new ProductDto(
+							p.Id,
+							p.Name,
+							p.Description,
+							p.Price,
+							p.StockQuantity,
+							p.CategoryId,
+							p.Rating,
+							p.Popularity,
+							p.CreatedAt,
+							url));
+		}
 
-                return result;
-        }
+		return result;
+	}
 }

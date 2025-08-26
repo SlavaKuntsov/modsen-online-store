@@ -12,14 +12,14 @@ public sealed class DeleteProductImageCommandHandler(IApplicationDbContext dbCon
 {
 	public async Task Handle(DeleteProductImageCommand request, CancellationToken ct)
 	{
-                var product = await dbContext.Products
-                        .Include(p => p.Image)
-                        .FirstOrDefaultAsync(p => p.Id == request.ProductId, ct);
-                if (product?.Image is null)
-                        return;
+		var product = await dbContext.Products
+				.Include(p => p.Image)
+				.FirstOrDefaultAsync(p => p.Id == request.ProductId, ct);
+		if (product?.Image is null)
+			return;
 
-                await minioService.RemoveFileAsync(null, product.Image.ObjectName);
-                dbContext.ProductImages.Remove(product.Image);
-                await dbContext.SaveChangesAsync(ct);
-        }
+		await minioService.RemoveFileAsync(null, product.Image.ObjectName);
+		dbContext.ProductImages.Remove(product.Image);
+		await dbContext.SaveChangesAsync(ct);
+	}
 }

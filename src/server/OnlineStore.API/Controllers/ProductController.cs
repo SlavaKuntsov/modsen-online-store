@@ -37,7 +37,7 @@ public class ProductController(IMediator mediator) : ControllerBase
 		return Ok(new ApiResponse<List<ProductDto>>(StatusCodes.Status200OK, products, products.Count));
 	}
 
-	[HttpGet("{id}")]
+	[HttpGet("{id:guid}")]
 	public async Task<IActionResult> GetById(Guid id, CancellationToken ct = default)
 	{
 		var product = await mediator.Send(new GetProductByIdQuery(id), ct);
@@ -58,7 +58,7 @@ public class ProductController(IMediator mediator) : ControllerBase
 				new ApiResponse<ProductDto>(StatusCodes.Status201Created, product, 1));
 	}
 
-	[HttpPut("{id}")]
+	[HttpPut("{id:guid}")]
 	[Authorize(Policy = "Admin")]
 	public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductRequest request, CancellationToken ct = default)
 	{
@@ -72,7 +72,7 @@ public class ProductController(IMediator mediator) : ControllerBase
 		return Ok(new ApiResponse<ProductDto>(StatusCodes.Status200OK, product, 1));
 	}
 
-	[HttpDelete("{id}")]
+	[HttpDelete("{id:guid}")]
 	[Authorize(Policy = "Admin")]
 	public async Task<IActionResult> Delete(Guid id, CancellationToken ct = default)
 	{
@@ -80,7 +80,7 @@ public class ProductController(IMediator mediator) : ControllerBase
 		return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Deleted", 0));
 	}
 
-        [HttpPost("{id}/image")]
+	[HttpPost("{id:guid}/image")]
 	[Authorize(Policy = "Admin")]
 	[Consumes("multipart/form-data")]
 	public async Task<IActionResult> AddImage(Guid id, [FromForm] AddProductImageRequest request, CancellationToken ct = default)
@@ -89,20 +89,20 @@ public class ProductController(IMediator mediator) : ControllerBase
 		return Ok(new ApiResponse<string>(StatusCodes.Status200OK, url, 1));
 	}
 
-        [HttpPut("{id}/image")]
+	[HttpPut("{id:guid}/image")]
 	[Authorize(Policy = "Admin")]
 	[Consumes("multipart/form-data")]
-        public async Task<IActionResult> UpdateImage(Guid id, [FromForm] UpdateProductImageRequest request, CancellationToken ct = default)
-        {
-                var url = await mediator.Send(new UpdateProductImageCommand(id, request.File), ct);
-                return Ok(new ApiResponse<string>(StatusCodes.Status200OK, url, 1));
-        }
+	public async Task<IActionResult> UpdateImage(Guid id, [FromForm] UpdateProductImageRequest request, CancellationToken ct = default)
+	{
+		var url = await mediator.Send(new UpdateProductImageCommand(id, request.File), ct);
+		return Ok(new ApiResponse<string>(StatusCodes.Status200OK, url, 1));
+	}
 
-        [HttpDelete("{id}/image")]
+	[HttpDelete("{id:guid}/image")]
 	[Authorize(Policy = "Admin")]
-        public async Task<IActionResult> DeleteImage(Guid id, CancellationToken ct = default)
-        {
-                await mediator.Send(new DeleteProductImageCommand(id), ct);
-                return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Deleted", 0));
-        }
+	public async Task<IActionResult> DeleteImage(Guid id, CancellationToken ct = default)
+	{
+		await mediator.Send(new DeleteProductImageCommand(id), ct);
+		return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Deleted", 0));
+	}
 }

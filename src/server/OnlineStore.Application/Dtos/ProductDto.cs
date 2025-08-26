@@ -9,5 +9,5 @@ public record ProductDto(
 		Guid CategoryId,
 		double Rating,
 		int Popularity,
-                DateTime CreatedAt,
-                string? ImageUrl);
+				DateTime CreatedAt,
+				string? ImageUrl);

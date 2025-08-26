@@ -42,7 +42,7 @@ public sealed class UpdateProductCommandHandler(IApplicationDbContext dbContext)
 						product.CategoryId,
 						product.Rating,
 						product.Popularity,
-                                                product.CreatedAt,
-                                                null);
-        }
+												product.CreatedAt,
+												null);
+	}
 }

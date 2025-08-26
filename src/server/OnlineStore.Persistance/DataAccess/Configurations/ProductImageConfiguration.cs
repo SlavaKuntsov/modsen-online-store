@@ -11,11 +11,11 @@ public class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage>
 		builder.HasKey(pi => pi.Id);
 		builder.Property(pi => pi.ObjectName).IsRequired();
 
-                builder.HasOne(pi => pi.Product)
-                        .WithOne(p => p.Image)
-                        .HasForeignKey<ProductImage>(pi => pi.ProductId)
-                        .OnDelete(DeleteBehavior.Cascade);
+		builder.HasOne(pi => pi.Product)
+				.WithOne(p => p.Image)
+				.HasForeignKey<ProductImage>(pi => pi.ProductId)
+				.OnDelete(DeleteBehavior.Cascade);
 
-                builder.HasIndex(pi => pi.ProductId).IsUnique();
-        }
+		builder.HasIndex(pi => pi.ProductId).IsUnique();
+	}
 }
