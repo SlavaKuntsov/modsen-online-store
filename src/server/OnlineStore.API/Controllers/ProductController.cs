@@ -2,10 +2,12 @@ using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using OnlineStore.API.Contracts;
 using OnlineStore.API.Contracts.Product;
 using OnlineStore.Application.Dtos;
 using OnlineStore.Application.Products;
+using OnlineStore.Application.ProductImages;
 
 namespace OnlineStore.API.Controllers;
 
@@ -71,11 +73,35 @@ public class ProductController(IMediator mediator) : ControllerBase
 		return Ok(new ApiResponse<ProductDto>(StatusCodes.Status200OK, product, 1));
 	}
 
-	[HttpDelete("{id}")]
-	[Authorize(Policy = "Admin")]
-	public async Task<IActionResult> Delete(Guid id, CancellationToken ct = default)
-	{
-		await mediator.Send(new DeleteProductCommand(id), ct);
-		return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Deleted", 0));
-	}
+        [HttpDelete("{id}")]
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken ct = default)
+        {
+                await mediator.Send(new DeleteProductCommand(id), ct);
+                return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Deleted", 0));
+        }
+
+        [HttpPost("{id}/images")]
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> AddImage(Guid id, [FromForm] IFormFile file, CancellationToken ct = default)
+        {
+                var url = await mediator.Send(new AddProductImageCommand(id, file), ct);
+                return Ok(new ApiResponse<string>(StatusCodes.Status200OK, url, 1));
+        }
+
+        [HttpPut("{id}/images/{imageId}")]
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> UpdateImage(Guid id, Guid imageId, [FromForm] IFormFile file, CancellationToken ct = default)
+        {
+                var url = await mediator.Send(new UpdateProductImageCommand(imageId, file), ct);
+                return Ok(new ApiResponse<string>(StatusCodes.Status200OK, url, 1));
+        }
+
+        [HttpDelete("{id}/images/{imageId}")]
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> DeleteImage(Guid id, Guid imageId, CancellationToken ct = default)
+        {
+                await mediator.Send(new DeleteProductImageCommand(imageId), ct);
+                return Ok(new ApiResponse<string>(StatusCodes.Status200OK, "Deleted", 0));
+        }
 }

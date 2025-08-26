@@ -2,6 +2,7 @@ using MediatR;
 using OnlineStore.Application.Abstractions.Data;
 using OnlineStore.Application.Dtos;
 using OnlineStore.Domain.Entities;
+using System.Collections.Generic;
 
 namespace OnlineStore.Application.Products;
 
@@ -32,10 +33,11 @@ public sealed class CreateProductCommandHandler(IApplicationDbContext dbContext)
 			product.Name,
 			product.Description,
 			product.Price,
-			product.StockQuantity,
-			product.CategoryId,
-			product.Rating,
-			product.Popularity,
-			product.CreatedAt);
-	}
+                        product.StockQuantity,
+                        product.CategoryId,
+                        product.Rating,
+                        product.Popularity,
+                        product.CreatedAt,
+                        new List<string>());
+        }
 }

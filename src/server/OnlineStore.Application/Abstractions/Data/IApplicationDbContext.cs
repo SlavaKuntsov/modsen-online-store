@@ -12,9 +12,10 @@ public interface IApplicationDbContext
 	DbSet<Product> Products { get; set; }
 	DbSet<Cart> Carts { get; set; }
 	DbSet<Order> Orders { get; set; }
-	DbSet<PromoCode> PromoCodes { get; set; }
-	DbSet<ProductReview> ProductReviews { get; set; }
-	DbSet<Favorite> Favorites { get; set; }
+        DbSet<PromoCode> PromoCodes { get; set; }
+        DbSet<ProductReview> ProductReviews { get; set; }
+        DbSet<Favorite> Favorites { get; set; }
+        DbSet<ProductImage> ProductImages { get; set; }
 
 	Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

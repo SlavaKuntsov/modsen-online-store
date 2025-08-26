@@ -30,9 +30,10 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OnlineStore.Application\OnlineStore.Application.csproj"/>
-		<ProjectReference Include="..\OnlineStore.Persistance\OnlineStore.Persistance.csproj"/>
-		<ProjectReference Include="..\SharedKernel\Common\Common.csproj"/>
-		<ProjectReference Include="..\SharedKernel\Utilities\Utilities.csproj"/>
-	</ItemGroup>
+                <ProjectReference Include="..\OnlineStore.Persistance\OnlineStore.Persistance.csproj"/>
+                <ProjectReference Include="..\SharedKernel\Common\Common.csproj"/>
+                <ProjectReference Include="..\SharedKernel\Utilities\Utilities.csproj"/>
+                <ProjectReference Include="..\SharedKernel\Minios\Minios.csproj"/>
+        </ItemGroup>
 
 </Project>

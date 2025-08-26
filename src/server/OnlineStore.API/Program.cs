@@ -10,6 +10,7 @@ using OnlineStore.API.Contracts.Auth.Examples;
 using OnlineStore.Application.Carts;
 using OnlineStore.Application.Extensions;
 using OnlineStore.Persistance.Extensions;
+using Minios;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -49,6 +50,7 @@ services.AddScoped<ICartService, CartService>();
 var app = builder.Build();
 
 app.ApplyMigrations();
+app.Services.EnsureMinioBucketExistsAsync().GetAwaiter().GetResult();
 
 app.UseExceptionHandler();
 

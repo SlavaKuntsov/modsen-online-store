@@ -2,6 +2,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OnlineStore.Application.Abstractions.Data;
 using OnlineStore.Application.Dtos;
+using Minios.Services;
+using System.Collections.Generic;
 
 namespace OnlineStore.Application.Products;
 
@@ -14,12 +16,14 @@ public sealed record GetProductsQuery(
 	string? SortBy = null,
 	bool Descending = false) : IRequest<List<ProductDto>>;
 
-public sealed class GetProductsQueryHandler(IApplicationDbContext dbContext)
-	: IRequestHandler<GetProductsQuery, List<ProductDto>>
+public sealed class GetProductsQueryHandler(IApplicationDbContext dbContext, IMinioService minioService)
+        : IRequestHandler<GetProductsQuery, List<ProductDto>>
 {
-	public async Task<List<ProductDto>> Handle(GetProductsQuery request, CancellationToken ct)
-	{
-		IQueryable<Domain.Entities.Product> query = dbContext.Products.AsQueryable();
+        public async Task<List<ProductDto>> Handle(GetProductsQuery request, CancellationToken ct)
+        {
+                IQueryable<Domain.Entities.Product> query = dbContext.Products
+                        .Include(p => p.Images)
+                        .AsQueryable();
 
 		if (request.CategoryId.HasValue)
 			query = query.Where(p => p.CategoryId == request.CategoryId.Value);
@@ -53,17 +57,30 @@ public sealed class GetProductsQueryHandler(IApplicationDbContext dbContext)
 			};
 		}
 
-		var products = await query.ToListAsync(ct);
+                var products = await query.ToListAsync(ct);
 
-		return products.Select(p => new ProductDto(
-			p.Id,
-			p.Name,
-			p.Description,
-			p.Price,
-			p.StockQuantity,
-			p.CategoryId,
-			p.Rating,
-			p.Popularity,
-			p.CreatedAt)).ToList();
-	}
+                var result = new List<ProductDto>();
+                foreach (var p in products)
+                {
+                        var urls = new List<string>();
+                        foreach (var img in p.Images)
+                        {
+                                urls.Add(await minioService.GetPresignedUrlAsync(null, img.ObjectName));
+                        }
+
+                        result.Add(new ProductDto(
+                                p.Id,
+                                p.Name,
+                                p.Description,
+                                p.Price,
+                                p.StockQuantity,
+                                p.CategoryId,
+                                p.Rating,
+                                p.Popularity,
+                                p.CreatedAt,
+                                urls));
+                }
+
+                return result;
+        }
 }
