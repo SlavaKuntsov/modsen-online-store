@@ -4,8 +4,6 @@
 https://localhost:7000/scalar/
 ```
 
----
-
 ## Meow
 
 ```
@@ -22,8 +20,6 @@ https://localhost:7000/scalar/
      ⠑⠤⢄⣀⠔⠁     ⡜        ⠊⠁  ⢀⠜
 
 ```
-
----
 
 ## Features
 
