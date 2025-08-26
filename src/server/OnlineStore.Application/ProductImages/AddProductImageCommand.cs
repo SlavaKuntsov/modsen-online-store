@@ -36,6 +36,7 @@ public sealed class AddProductImageCommandHandler(IApplicationDbContext dbContex
                 };
 
                 product.Image = image;
+                dbContext.ProductImages.Add(image);
                 await dbContext.SaveChangesAsync(ct);
 
 		return await minioService.GetPresignedUrlAsync(null, objectName);
