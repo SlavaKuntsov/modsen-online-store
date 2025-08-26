@@ -1,4 +1,4 @@
-﻿using Common.Enums;
+using Common.Enums;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -24,7 +24,7 @@ public static class MinioExtension
 			serviceProvider =>
 			{
 				var options = serviceProvider.GetRequiredService<IOptions<MinioOptions>>().Value
-							?? throw new ArgumentNullException("MinIO configuration is missing");
+							?? throw new ArgumentNullException(nameof(services), "MinIO configuration is missing");
 
 				return new MinioClient()
 					.WithEndpoint(options.Endpoint)

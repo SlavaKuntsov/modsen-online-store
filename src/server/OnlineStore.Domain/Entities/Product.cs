@@ -9,10 +9,10 @@ public class Product
 	public int StockQuantity { get; set; }
 	public Guid CategoryId { get; set; }
 	public Category Category { get; set; } = null!;
-        public double Rating { get; set; }
-        public int Popularity { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public List<ProductImage> Images { get; set; } = new();
+	public double Rating { get; set; }
+	public int Popularity { get; set; }
+	public DateTime CreatedAt { get; set; }
+	public List<ProductImage> Images { get; set; } = new();
 
 	public Product() { }
 

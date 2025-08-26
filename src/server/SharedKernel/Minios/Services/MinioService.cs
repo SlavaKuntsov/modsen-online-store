@@ -80,7 +80,6 @@ public class MinioService(
 		};
 	}
 
-
 	public async Task RemoveFileAsync(string? bucketName, string objectName)
 	{
 		bucketName ??= _options.DefaultBucket;
@@ -131,7 +130,7 @@ public class MinioService(
 		int expiresInSeconds = 604800)
 	{
 		bucketName ??= _options.DefaultBucket;
-		
+
 		var minioEndpoint = GetEndpointForCurrentRequest();
 
 		var minioClient2 = new MinioClient()

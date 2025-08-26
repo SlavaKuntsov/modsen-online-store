@@ -6,11 +6,11 @@ using Common.OpenApi;
 using DotNetEnv;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.HttpOverrides;
+using Minios;
 using OnlineStore.API.Contracts.Auth.Examples;
 using OnlineStore.Application.Carts;
 using OnlineStore.Application.Extensions;
 using OnlineStore.Persistance.Extensions;
-using Minios;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;
 
