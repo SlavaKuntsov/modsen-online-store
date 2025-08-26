@@ -53,9 +53,9 @@ public class OrderController(IMediator mediator) : ControllerBase
 
 	[HttpPost("pay")]
 	[Authorize(Policy = "User")]
-	public async Task<IActionResult> Pay([FromBody] PayOrderRequest request, CancellationToken ct = default)
+	public async Task<IActionResult> Pay(Guid orderId, CancellationToken ct = default)
 	{
-		var order = await mediator.Send(new PayOrderCommand(request.OrderId), ct);
+		var order = await mediator.Send(new PayOrderCommand(orderId), ct);
 		return Ok(new ApiResponse<OrderDto>(StatusCodes.Status200OK, order, 1));
 	}
 
