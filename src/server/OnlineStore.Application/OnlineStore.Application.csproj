@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\OnlineStore.Domain\OnlineStore.Domain.csproj" />
       <ProjectReference Include="..\SharedKernel\Utilities\Utilities.csproj" />
+      <ProjectReference Include="..\SharedKernel\Minios\Minios.csproj" />
     </ItemGroup>
 
     <ItemGroup>

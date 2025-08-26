@@ -6,6 +6,7 @@ using Common.OpenApi;
 using DotNetEnv;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.HttpOverrides;
+using Minios;
 using OnlineStore.API.Contracts.Auth.Examples;
 using OnlineStore.Application.Carts;
 using OnlineStore.Application.Extensions;
@@ -49,6 +50,7 @@ services.AddScoped<ICartService, CartService>();
 var app = builder.Build();
 
 app.ApplyMigrations();
+app.Services.EnsureMinioBucketExistsAsync().GetAwaiter().GetResult();
 
 app.UseExceptionHandler();
 

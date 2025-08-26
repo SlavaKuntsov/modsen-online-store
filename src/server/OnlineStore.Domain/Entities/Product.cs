@@ -12,7 +12,7 @@ public class Product
 	public double Rating { get; set; }
 	public int Popularity { get; set; }
 	public DateTime CreatedAt { get; set; }
-	// public List<ProductImage> Images { get; set; }
+	public List<ProductImage> Images { get; set; } = new();
 
 	public Product() { }
 

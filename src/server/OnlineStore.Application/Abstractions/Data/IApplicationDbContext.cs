@@ -15,6 +15,7 @@ public interface IApplicationDbContext
 	DbSet<PromoCode> PromoCodes { get; set; }
 	DbSet<ProductReview> ProductReviews { get; set; }
 	DbSet<Favorite> Favorites { get; set; }
+	DbSet<ProductImage> ProductImages { get; set; }
 
 	Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

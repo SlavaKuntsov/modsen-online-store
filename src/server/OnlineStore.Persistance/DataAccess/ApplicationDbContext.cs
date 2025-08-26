@@ -18,6 +18,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 	public DbSet<PromoCode> PromoCodes { get; set; }
 	public DbSet<ProductReview> ProductReviews { get; set; }
 	public DbSet<Favorite> Favorites { get; set; }
+	public DbSet<ProductImage> ProductImages { get; set; }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{

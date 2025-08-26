@@ -38,10 +38,11 @@ public sealed class UpdateProductCommandHandler(IApplicationDbContext dbContext)
 			product.Name,
 			product.Description,
 			product.Price,
-			product.StockQuantity,
-			product.CategoryId,
-			product.Rating,
-			product.Popularity,
-			product.CreatedAt);
+						product.StockQuantity,
+						product.CategoryId,
+						product.Rating,
+						product.Popularity,
+						product.CreatedAt,
+						new List<string>());
 	}
 }

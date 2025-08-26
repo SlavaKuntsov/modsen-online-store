@@ -20,6 +20,7 @@
       <ProjectReference Include="..\OnlineStore.Domain\OnlineStore.Domain.csproj" />
       <ProjectReference Include="..\SharedKernel\Databases\Databases.csproj" />
         <ProjectReference Include="..\SharedKernel\Redis\Redis.csproj" />
+      <ProjectReference Include="..\SharedKernel\Minios\Minios.csproj" />
     </ItemGroup>
 
 </Project>

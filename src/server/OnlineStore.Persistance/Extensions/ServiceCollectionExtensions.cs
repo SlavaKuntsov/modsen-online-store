@@ -1,6 +1,7 @@
 using Databases;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Minios;
 using OnlineStore.Application.Abstractions.Data;
 using OnlineStore.Persistance.DataAccess;
 using Redis;
@@ -17,6 +18,7 @@ public static class ServiceCollectionExtensions
 	{
 		services.AddPostgres<IApplicationDbContext, ApplicationDbContext>(configuration);
 		services.AddRedis(configuration);
+		services.AddMinio(configuration);
 
 		services.AddScoped<ICookieService, CookieService>();
 		services.AddScoped<IPasswordHash, PasswordHash>();
